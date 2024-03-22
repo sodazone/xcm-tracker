@@ -12,8 +12,6 @@ A demonstration web application for tracking XCM executions over WebSockets.
 ## How it looks
 
 ![All Networks](https://github.com/sodazone/xcm-tracker/blob/main/.misc/assets/xcm-tracker-all-networks.png)
-![Asset Hub transfer](https://github.com/sodazone/xcm-tracker/blob/main/.misc/assets/ah-transfer.png)
-![Mixed Interactions](https://github.com/sodazone/xcm-tracker/blob/main/.misc/assets/mix-capture.png)
 
 ## Running
 
