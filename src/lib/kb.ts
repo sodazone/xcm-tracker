@@ -58,9 +58,8 @@ export function humanize(journey: XcmJourney) {
     beneficiary = X1.Parachain;
   }
 
-  const from = sender
-    ? trunc(sender["Id"] ?? sender)
-    : chainName(origin.chainId);
+  const signer = sender?.signer;
+  const from = signer ? trunc(signer.id ?? signer) : chainName(origin.chainId);
   const to = [XcmJourneyType.Teleport, XcmJourneyType.Transfer].includes(type)
     ? trunc(beneficiary)
     : chainName(destination.chainId);

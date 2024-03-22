@@ -13,18 +13,23 @@ import { IconChain, IconPulse } from "../icons/index.js";
 import { trunc } from "../lib/utils.js";
 import { sender } from "../lib/mock.js";
 
-@customElement("oc-subscription")
-export class SubscriptionElement extends OcelloidsElement {
+function uniques<T>(items: T[]) {
+  const f = items.flat();
+  return Array.from(new Set(f.values()));
+}
+
+@customElement("oc-subscription-streams")
+export class SubscriptionStreamsElement extends OcelloidsElement {
   @property({
-    type: Object,
+    type: Array,
   })
-  subscription: Subscription;
+  subscriptions: Subscription[];
 
   @state()
   private journeys: Record<string, XcmJourney> = {};
 
   @state()
-  private ws?: WebSocket;
+  private connections: WebSocket[] = [];
 
   @property({
     type: Boolean,
@@ -47,26 +52,30 @@ export class SubscriptionElement extends OcelloidsElement {
   }
 
   renderSubscriptionDetails() {
+    const origins = uniques(this.subscriptions.map((s) => s.origin));
+    const destinations = uniques(this.subscriptions.map((s) => s.destinations));
+    const senders = uniques(this.subscriptions.map((s) => s.senders ?? "*"));
+
     return html`
       <div
         class=${tw`flex w-full text-sm items-center space-x-3 text-gray-500 px-4 border-b border-gray-900 divide-x divide-gray-900 bg-gray-900 bg-opacity-80`}
       >
         <div class=${tw`flex flex-col space-y-2 pb-3 items-center`}>
-          <span class=${tw`uppercase font-semibold`}>Origin</span>
-          <span>${IconChain(this.subscription.origin)}</span>
+          <span class=${tw`uppercase font-semibold`}>Origins</span>
+          <span class=${tw`flex -space-x-1`}>
+            ${origins.map((origin) => IconChain(origin))}
+          </span>
         </div>
         <div class=${tw`flex flex-col space-y-2 pl-3 pb-3 items-center`}>
           <span class=${tw`uppercase font-semibold`}>Destinations</span>
           <span class=${tw`flex -space-x-1`}>
-            ${this.subscription.destinations.map((d) => IconChain(d))}
+            ${destinations.map((destination) => IconChain(destination))}
           </span>
         </div>
         <div class=${tw`flex flex-col space-y-2 pl-3 pb-4`}>
           <span class=${tw`uppercase font-semibold`}>Senders</span>
           <span class=${tw`text-gray-200`}>
-            ${Array.isArray(this.subscription.senders)
-              ? this.subscription.senders.map((s) => trunc(s)).join(",")
-              : this.subscription.senders ?? "*"}
+            ${senders.map((s) => trunc(s)).join(",")}
           </span>
         </div>
       </div>
@@ -109,9 +118,13 @@ export class SubscriptionElement extends OcelloidsElement {
   }
 
   shouldUpdate(props: PropertyValues<this>) {
+    const ids = this.subscriptions.map((s) => s.id);
     if (
-      props.get("subscription") !== undefined &&
-      props.get("subscription").id !== this.subscription.id
+      props.get("subscriptions") !== undefined &&
+      !props
+        .get("subscriptions")
+        .map((s) => s.id)
+        .every((id) => ids.includes(id))
     ) {
       this.#reset();
     }
@@ -119,13 +132,17 @@ export class SubscriptionElement extends OcelloidsElement {
   }
 
   render() {
-    if (this.ws === undefined) {
+    if (this.connections.length === 0) {
       console.log("open ws");
 
       this.journeys = {};
-      this.ws = this.client.subscribe(this.subscription.id, {
-        onMessage: this.onMessage.bind(this),
-      });
+      for (const subscription of this.subscriptions) {
+        this.connections.push(
+          this.client.subscribe(subscription.id, {
+            onMessage: this.onMessage.bind(this),
+          }),
+        );
+      }
 
       if (this.mocked) {
         sender(this.onMessage.bind(this));
@@ -141,11 +158,13 @@ export class SubscriptionElement extends OcelloidsElement {
   }
 
   #reset() {
-    if (this.ws) {
+    if (this.connections.length === 0) {
       console.log("close ws");
 
-      this.ws.close(1000, "bye");
-      this.ws = undefined;
+      for (const ws of this.connections) {
+        ws.close(1000, "bye");
+      }
+      this.connections = [];
     }
   }
 }

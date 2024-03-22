@@ -16,9 +16,9 @@ export type XcmJourneyWaypoint = {
   blockNumber?: string;
   outcome?: string;
   error?: AnyJson;
-  event?: unknown;
-  extrinsic?: unknown;
-  instructions?: unknown;
+  event?: AnyJson;
+  extrinsic?: AnyJson;
+  instructions?: AnyJson;
   assetsTrapped?: AnyJson;
   skipped?: boolean;
   timeout?: boolean;

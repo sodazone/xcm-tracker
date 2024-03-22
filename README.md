@@ -16,13 +16,13 @@ A demonstration web application for tracking XCM executions over WebSockets.
 
 ## Running
 
-Corepack enable.
+Corepack enable
 
 ```shell
 corepack enable
 ```
 
-Run the web app.
+Run the web app
 
 ```shell
 yarn && yarn dev

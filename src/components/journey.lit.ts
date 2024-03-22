@@ -52,15 +52,19 @@ export class Journey extends TwElement {
     }
   }
 
-  clickHandler(e: Event, item: XcmJourneyWaypoint) {
+  showXcmSource(e: Event, item: XcmJourneyWaypoint) {
     this.selected = item;
+  }
+
+  closeXcmSource() {
+    this.selected = undefined;
   }
 
   renderStatusRow(point: XcmJourneyWaypoint) {
     return html`
       <div
         class=${tw`flex w-full items-center justify-between px-6 py-4`}
-        @click=${(e: Event) => this.clickHandler(e, point)}
+        @click=${(e: Event) => this.showXcmSource(e, point)}
       >
         <div class=${tw`flex items-center space-x-4`}>
           ${this.iconForOutcome(point)}
@@ -120,14 +124,14 @@ export class Journey extends TwElement {
       </div>
       ${this.selected
         ? html` <div
-            @click=${this.clickHandler}
             ${animate({
               in: fadeInSlow,
             })}
           >
             ${this.selected.assetsTrapped
               ? html` <div
-                    class=${tw`text-xs px-4 text-gray-500 capitalize bg-gray-700 border-gray-600 border-t`}
+                    @click=${this.closeXcmSource}
+                    class=${tw`text-xs px-4 text-gray-400 capitalize bg-gray-600`}
                   >
                     Asset Trap
                   </div>
@@ -135,14 +139,18 @@ export class Journey extends TwElement {
                     code=${JSON.stringify(this.selected.assetsTrapped, null, 2)}
                   ></code-block>`
               : ""}
-            <div class=${tw`text-xs px-4 text-gray-500 capitalize bg-gray-700`}>
+            <div
+              @click=${this.closeXcmSource}
+              class=${tw`text-xs px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}
+            >
               XCM Instructions
             </div>
             <code-block
               code=${JSON.stringify(this.selected.instructions, null, 2)}
             ></code-block>
             <div
-              class=${tw`text-xs px-4 text-gray-500 capitalize bg-gray-700 border-gray-600 border-t`}
+              @click=${this.closeXcmSource}
+              class=${tw`text-xs px-4 text-gray-400 capitalize bg-gray-600 border-t border-gray-600`}
             >
               Waypoint
             </div>

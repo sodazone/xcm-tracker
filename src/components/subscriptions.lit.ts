@@ -1,83 +1,62 @@
 import { html } from "lit";
-import { Task } from "@lit/task";
 import { customElement, state } from "lit/decorators.js";
 
-import { Subscription } from "@sodazone/ocelloids-client";
+import "./subscription-all.lit";
+import "./subscription-select.lit";
 
-import "./subscription.lit.js";
-import { OcelloidsElement } from "../base/ocelloids.lit.js";
+import { TwElement } from "../base/tw.lit.js";
 import { tw } from "../style.js";
-import { IconChevron, IconSpinner } from "../icons/index.js";
 
 @customElement("oc-subscriptions")
-export class Subscriptions extends OcelloidsElement {
+export class SubscriptionsElement extends TwElement {
   @state()
-  private subscriptionId?: string;
+  selected: string;
 
-  @state({
-    hasChanged: () => false,
-  })
-  private subscriptions: Subscription[] = [];
-
-  private _getSubscriptions = new Task<Subscription[]>(this, {
-    task: async (_, { signal }) => {
-      this.subscriptions = await this.client.allSubscriptions({ signal });
-      return this.subscriptions;
-    },
-    args: () => [],
-  });
-
-  constructor() {
-    super();
+  renderSelection() {
+    if (this.selected) {
+      return this.selected === "select"
+        ? html`<oc-select-subscription></oc-select-subscription>`
+        : html`<oc-all-subscriptions></oc-all-subscriptions>`;
+    }
+    return html`</>`;
   }
-
-  onSelected(e) {
-    this.subscriptionId = e.target.value;
-  }
-
-  renderSelect(subscriptions) {
-    return html` <div
-      class=${tw`flex flex-col border-b border-gray-900 bg-gray-900 bg-opacity-80`}
-    >
-      <div class=${tw`grid`}>
-        ${IconChevron()}
-        <select
-          id="select-subscription"
-          class=${tw`select-big`}
-          @change=${this.onSelected}
-        >
-          <option selected disabled hidden>Select a subscription…</option>
-          ${subscriptions.map(
-            (s) => html`<option value=${s.id}>${s.id}</option>`,
-          )}
-        </select>
-      </div>
-    </div>`;
-  }
-
-  renderSubscriptions(subscriptions) {
-    return html`<div class=${tw`flex flex-col`}>
-      ${this.renderSelect(subscriptions)}
-      ${this.subscriptionId &&
-      html`
-        <oc-subscription
-          .mocked=${false}
-          class=${tw`flex flex-col`}
-          .subscription=${this.subscriptions.find(
-            (s) => s.id === this.subscriptionId,
-          )}
-        >
-        </oc-subscription>
-      `}
-    </div>`;
-  }
-
   render() {
-    return this._getSubscriptions.render({
-      pending: () =>
-        html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
-      complete: (s) => this.renderSubscriptions(s),
-      error: (e) => html`<div>error: ${e}</div>`,
-    });
+    return html`
+      <div class=${tw("bg-gray-900 bg-opacity-80 border-b border-gray-900")}>
+        <ul class=${tw("grid grid-cols-2 list-none")}>
+          <li
+            @click=${() => (this.selected = "all")}
+            class=${tw(
+              "flex justify-center border-t-2 cursor-pointer uppercase border-r border-r-gray-900",
+            ) +
+            " " +
+            tw(
+              this.selected === "all"
+                ? "border-t-yellow-500 font-semibold"
+                : "border-t-transparent",
+            )}
+          >
+            <span class=${tw("inline-block py-2 px-3")}> All Networks </span>
+          </li>
+          <li
+            @click=${() => (this.selected = "select")}
+            class=${tw(
+              "flex justify-center border-t-2 cursor-pointer uppercase",
+            ) +
+            " " +
+            tw(
+              this.selected === "select"
+                ? "border-t-yellow-500 font-semibold"
+                : "border-t-transparent",
+            )}
+          >
+            <span class=${tw("inline-block py-2 px-3")}>
+              Select Subscription
+            </span>
+          </li>
+        </ul>
+      </div>
+      ${this.renderSelection()}
+    `;
   }
 }
