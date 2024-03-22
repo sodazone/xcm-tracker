@@ -626,6 +626,26 @@ function getIconByChainId(id) {
         class=${tw`w-6 h-6`}
         style="background-image: url(/img/manta.png);background-size: cover;"
       ></span>`;
+    case "2006": // astar
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/astar.png);background-size: cover;"
+      ></span>`;
+    case "2030": // bifrost
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/bifrost.png);background-size: cover;"
+      ></span>`;
+    case "2031": // centrifuge
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/centrifuge.png);background-size: cover;"
+      ></span>`;
+    case "2032": // interlay
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/interlay.png);background-size: cover;"
+      ></span>`;
     default:
       return html`<span class=${tw`w-6 h-6`}></span>`;
   }
