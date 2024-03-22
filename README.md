@@ -16,8 +16,11 @@ A demonstration web application for tracking XCM executions over WebSockets.
 
 ## Running
 
-> [!NOTE]
-> Ensure that you have built the client package.
+Corepack enable.
+
+```shell
+corepack enable
+```
 
 Run the web app.
 
