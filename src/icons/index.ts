@@ -621,6 +621,74 @@ function getIconByChainId(id) {
           />
         </svg>
       `;
+    case "2094":
+      return html`
+        <svg
+          version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 384 384"
+          style="enable-background:new 0 0 384 384;"
+          xml:space="preserve"
+        >
+          <style type="text/css">
+            .st0 {
+              fill: #32253e;
+            }
+            .st1 {
+              fill: #dae9eb;
+            }
+            .st2 {
+              fill: #ffffff;
+            }
+          </style>
+          <g>
+            <g>
+              <path
+                class="st2"
+                d="M193.8,64c-52-0.9-96.5,41.6-97.7,93.6c-0.9,35.3,17.3,66.4,44.9,83.8c1.3,0.8,3.1,0.3,3.8-1.1l21.6-43.1
+			c3.2-6.3,2.7-13.9-1.2-19.8c-3.3-5.1-5.2-11.2-5.1-17.7c0.2-16.8,13.5-30.7,30.2-31.6c19.3-1,35.2,15.1,33.7,34.5
+			c-1.2,15.6-13.8,28.1-29.3,29.4c-0.1,0-0.2,0-0.3,0c-7.1,0.5-13.4,4.6-16.6,11L156.2,246c-0.7,1.4,0,3.1,1.4,3.6
+			c10.9,4.2,22.7,6.4,35.1,6.4c52.5-0.3,95.4-43.4,95.4-95.9C288.2,107.6,246.1,64.9,193.8,64z"
+              />
+              <circle class="st2" cx="128.1" cy="288" r="32" />
+            </g>
+          </g>
+        </svg>
+      `;
+    case "2101":
+      return html`
+        <svg
+          width="300"
+          height="300"
+          viewBox="0 0 300 300"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M300 150C300 232.843 232.843 300 150 300C67.1573 300 0 232.843 0 150C0 67.1573 67.1573 0 150 0C232.843 0 300 67.1573 300 150ZM149.489 31.9888C118.837 31.9888 93.9888 56.837 93.9888 87.4888V123.489C93.9888 154.141 118.837 178.989 149.489 178.989C153.791 178.989 157.979 178.499 162 177.573C164.415 177.017 165.092 174.036 163.3 172.325L163 172.038L131.027 141.5C126.069 136.684 122.989 129.946 122.989 122.489V88.4888C122.989 73.8532 134.853 61.9888 149.489 61.9888C164.124 61.9888 175.989 73.8532 175.989 88.4888V100C175.989 102.209 177.78 104 179.989 104H200.989C203.198 104 204.989 102.209 204.989 100V87.4888C204.989 56.837 180.141 31.9888 149.489 31.9888ZM205 209.5C205 240.152 180.152 265 149.5 265C118.848 265 94 240.152 94 209.5V197C94 194.791 95.7909 193 98 193H119C121.209 193 123 194.791 123 197V208.5C123 223.136 134.864 235 149.5 235C164.136 235 176 223.136 176 208.5V174.5C176 167.042 172.919 160.304 167.961 155.489L135.989 124.951L135.688 124.664C133.896 122.952 134.574 119.972 136.989 119.416C141.01 118.49 145.198 118 149.5 118C180.152 118 205 142.848 205 173.5V209.5Z"
+            fill="url(#paint0_linear)"
+          />
+          <defs>
+            <linearGradient
+              id="paint0_linear"
+              x1="150"
+              y1="0"
+              x2="150"
+              y2="300"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stop-color="#F50083" />
+              <stop offset="1" stop-color="#720497" />
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
     case "2104": // manta
       return html`<span
         class=${tw`w-6 h-6`}
@@ -645,6 +713,36 @@ function getIconByChainId(id) {
       return html`<span
         class=${tw`w-6 h-6`}
         style="background-image: url(/img/interlay.png);background-size: cover;"
+      ></span>`;
+    case "2019": // composable
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/composable.png);background-size: cover;"
+      ></span>`;
+    case "2026": // nodle
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/nodle.png);background-size: cover;"
+      ></span>`;
+    case "2035": // phala
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/phala.png);background-size: cover;"
+      ></span>`;
+    case "2040": // polkadex
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/polkadex.png);background-size: cover;"
+      ></span>`;
+    case "2037": // unique
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/unique.png);background-size: cover;"
+      ></span>`;
+    case "3340": // invarch
+      return html`<span
+        class=${tw`w-6 h-6`}
+        style="background-image: url(/img/invarch.jpeg);background-size: cover;"
       ></span>`;
     default:
       return html`<span class=${tw`w-6 h-6`}></span>`;
