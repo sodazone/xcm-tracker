@@ -12,6 +12,7 @@ import { tw } from "../style.js";
 import { IconChain, IconPulse } from "../icons/index.js";
 import { trunc } from "../lib/utils.js";
 import { sender } from "../lib/mock.js";
+import { FixedSizedCache } from "../lib/cache.js";
 
 function uniques<T>(items: T[]) {
   const f = items.flat();
@@ -26,7 +27,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   subscriptions: Subscription[];
 
   @state()
-  private journeys: Record<string, XcmJourney> = {};
+  private journeys = new FixedSizedCache<XcmJourney>();
 
   @state()
   private connections: WebSocket[] = [];
@@ -44,9 +45,11 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     console.log("XCM", xcm);
 
     const id = await toJourneyId(xcm);
-    const journey = this.journeys[id];
+    const journey = this.journeys.get(id);
 
-    this.journeys[id] = await mergeJourney(xcm, journey);
+    const merged = await mergeJourney(xcm, journey);
+
+    this.journeys.set(id, merged);
 
     this.requestUpdate();
   }
@@ -83,13 +86,14 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   }
 
   renderJourneys() {
-    const journeys = Object.values(this.journeys).reverse();
+    const journeys = this.journeys.entries();
     return journeys.length > 0
       ? html` <ul>
           ${repeat(
             journeys,
-            (j) => j.id,
-            (j) => html`
+            ([id]) => id,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ([_, j]) => html`
               <li
                 ${animate({
                   keyframeOptions: {
@@ -135,7 +139,6 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     if (this.connections.length === 0) {
       console.log("open ws");
 
-      this.journeys = {};
       for (const subscription of this.subscriptions) {
         this.connections.push(
           this.client.subscribe(subscription.id, {
