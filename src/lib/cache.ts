@@ -79,8 +79,6 @@ export class FixedSizedCache<T> {
     const data = this.#data.get(key);
 
     if (data) {
-      this.#toHead(key);
-
       return data;
     }
 
@@ -88,9 +86,7 @@ export class FixedSizedCache<T> {
   }
 
   set(key: string, value: T): void {
-    if (this.#data.has(key)) {
-      this.#toHead(key);
-    } else {
+    if (!this.#data.has(key)) {
       const node = new FixSizedCacheNode(key);
 
       this.#refs.set(node.key, node);
@@ -115,18 +111,5 @@ export class FixedSizedCache<T> {
     }
 
     this.#data.set(key, value);
-  }
-
-  #toHead(key: string): void {
-    const ref = this.#refs.get(key);
-
-    if (ref && ref !== this.#head) {
-      ref.prev.next = ref.next;
-      ref.next.prev = ref.prev;
-      ref.next = this.#head;
-
-      this.#head.prev = ref;
-      this.#head = ref;
-    }
   }
 }
