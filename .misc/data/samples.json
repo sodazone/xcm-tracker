@@ -2,7 +2,13 @@
   {
     "type": "xcm.sent",
     "subscriptionId": "hydra-transfers",
-    "legs": [{ "from": "urn:ocn:polkadot:2034", "to": "urn:ocn:polkadot:0" }],
+    "legs": [
+      {
+        "from": "urn:ocn:polkadot:2034",
+        "to": "urn:ocn:polkadot:0",
+        "type": "vmp"
+      }
+    ],
     "waypoint": {
       "chainId": "urn:ocn:polkadot:2034",
       "blockHash": "0xac7df8a97d327c767900e7d5e96ef03b74cd3699f43024d449143d2c172f980b",
@@ -164,7 +170,13 @@
   {
     "type": "xcm.timeout",
     "subscriptionId": "hydra-transfers",
-    "legs": [{ "from": "urn:ocn:polkadot:2034", "to": "urn:ocn:polkadot:0" }],
+    "legs": [
+      {
+        "from": "urn:ocn:polkadot:2034",
+        "to": "urn:ocn:polkadot:0",
+        "type": "vmp"
+      }
+    ],
     "waypoint": {
       "chainId": "urn:ocn:polkadot:2034",
       "blockHash": "0xac7df8a97d327c767900e7d5e96ef03b74cd3699f43024d449143d2c172f980b",
@@ -327,8 +339,16 @@
     "type": "xcm.sent",
     "subscriptionId": "hydra-transfers",
     "legs": [
-      { "from": "urn:ocn:polkadot:2034", "to": "urn:ocn:polkadot:0" },
-      { "from": "urn:ocn:polkadot:0", "to": "urn:ocn:polkadot:1000" }
+      {
+        "from": "urn:ocn:polkadot:2034",
+        "to": "urn:ocn:polkadot:0",
+        "type": "hop"
+      },
+      {
+        "from": "urn:ocn:polkadot:0",
+        "to": "urn:ocn:polkadot:1000",
+        "type": "hop"
+      }
     ],
     "waypoint": {
       "chainId": "urn:ocn:polkadot:2034",
@@ -528,8 +548,16 @@
     "type": "xcm.hop",
     "subscriptionId": "hydra-transfers",
     "legs": [
-      { "from": "urn:ocn:polkadot:2034", "to": "urn:ocn:polkadot:0" },
-      { "from": "urn:ocn:polkadot:0", "to": "urn:ocn:polkadot:1000" }
+      {
+        "from": "urn:ocn:polkadot:2034",
+        "to": "urn:ocn:polkadot:0",
+        "type": "hop"
+      },
+      {
+        "from": "urn:ocn:polkadot:0",
+        "to": "urn:ocn:polkadot:1000",
+        "type": "hop"
+      }
     ],
     "waypoint": {
       "legIndex": 0,
@@ -709,8 +737,16 @@
     "type": "xcm.timeout",
     "subscriptionId": "hydra-transfers",
     "legs": [
-      { "from": "urn:ocn:polkadot:2034", "to": "urn:ocn:polkadot:0" },
-      { "from": "urn:ocn:polkadot:0", "to": "urn:ocn:polkadot:1000" }
+      {
+        "from": "urn:ocn:polkadot:2034",
+        "to": "urn:ocn:polkadot:0",
+        "type": "hop"
+      },
+      {
+        "from": "urn:ocn:polkadot:0",
+        "to": "urn:ocn:polkadot:1000",
+        "type": "hop"
+      }
     ],
     "waypoint": {
       "chainId": "urn:ocn:polkadot:2034",

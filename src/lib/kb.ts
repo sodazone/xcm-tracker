@@ -27,6 +27,7 @@ export function humanize(journey: XcmJourney) {
       op.DepositReserveAsset ||
       op.TransferReserveAsset,
   );
+  const bridgeMessage = versioned.find((op) => op.ExportMessage);
 
   let type = XcmJourneyType.Unknown;
   if (versioned.find((op) => op.Transact)) {
@@ -34,7 +35,8 @@ export function humanize(journey: XcmJourney) {
   } else if (
     (versioned.find((op) => op.WithdrawAsset || op.ReserveAssetDeposited) &&
       versioned.find((op) => op.DepositAsset)) ||
-    hopTransfer
+    hopTransfer ||
+    bridgeMessage
   ) {
     type = XcmJourneyType.Transfer;
   } else if (versioned.find((op) => op.ReceiveTeleportedAsset)) {
@@ -46,6 +48,11 @@ export function humanize(journey: XcmJourney) {
   if (hopTransfer) {
     deposit = (
       (Object.values(hopTransfer)[0] as AnyJson).xcm as AnyJson[]
+    ).find((op) => op.DepositAsset !== undefined);
+  }
+  if (bridgeMessage) {
+    deposit = (
+      (Object.values(bridgeMessage)[0] as AnyJson).xcm as AnyJson[]
     ).find((op) => op.DepositAsset !== undefined);
   }
   const X1 = deposit.DepositAsset.beneficiary.interior.X1;

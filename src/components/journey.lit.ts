@@ -3,7 +3,11 @@ import { customElement, property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { animate, fadeInSlow } from "@lit-labs/motion";
 
-import { XcmJourney, XcmJourneyWaypoint } from "../lib/journey.js";
+import {
+  XcmJourney,
+  XcmJourneyLeg,
+  XcmJourneyWaypoint,
+} from "../lib/journey.js";
 import { tw } from "../style.js";
 import { TwElement } from "../base/tw.lit.js";
 import {
@@ -19,6 +23,7 @@ import {
   IconChainSkipped,
   IconTimeout,
   IconChainTimeout,
+  IconChain,
 } from "../icons/index.js";
 import { HumanizedXcm, humanize } from "../lib/kb.js";
 
@@ -32,6 +37,26 @@ export class Journey extends TwElement {
   data: XcmJourney;
 
   @state() selected: XcmJourneyWaypoint;
+
+  // XXX just a quick hack
+  iconForOutcomeFromConsensus(
+    j: XcmJourneyWaypoint
+  ) {
+    const { chainId } = j
+    const relay = chainId.substring(0, chainId.lastIndexOf(':') + 1) + '0';
+    if(chainId === relay) {
+      return this.iconForOutcome(j);
+    }
+
+    return html`
+    <span class=${tw('flex relative')}>
+      ${this.iconForOutcome(j)}
+      <span class=${tw('flex absolute -ml-2 -mt-2')}>
+       ${IconChain(relay, 'xs')}
+      </span>
+    </span>
+    `
+  }
 
   iconForOutcome(
     { chainId, outcome, skipped, timeout }: XcmJourneyWaypoint,
@@ -66,12 +91,17 @@ export class Journey extends TwElement {
         class=${tw`flex w-full items-center justify-between px-6 py-4`}
         @click=${(e: Event) => this.showXcmSource(e, point)}
       >
-        <div class=${tw`flex items-center space-x-4`}>
-          ${this.iconForOutcome(point)}
+        <div class=${tw`flex items-center justify-center space-x-4`}>
+          ${this.iconForOutcomeFromConsensus(point)}
           <span
             >${point.event && Object.keys(point.event).length > 0
               ? point.event.eventId
               : point.blockNumber}</span
+          >
+          <span class=${tw`ml-auto text-gray-400 text-xs font-mono capitalize`}
+            >${point.event && Object.keys(point.event).length > 0
+              ? `${point.event.section} ${point.event.method}`
+              : ''}</span
           >
         </div>
         <div class=${tw`flex justify-end items-center space-x-4`}>
@@ -87,6 +117,28 @@ export class Journey extends TwElement {
         </div>
       </div>
     `;
+  }
+
+  renderLeg(leg: XcmJourneyLeg) {
+    const label = leg.type === 'bridge' ?
+    'from ' + leg.stops.map(s => s.chainId.split(':')[2].toUpperCase()).join(' to ')
+    : 'on ' + leg.stops[0].chainId.split(':')[2].toUpperCase()
+    return html`
+    <div>
+      <div class=${tw`flex mx-auto py-2 px-4 bg-gray-900 bg-opacity-70 text-gray-400 text-sm`}>
+        ${label}
+      </div>
+      <div
+        class=${tw`flex flex-col divide-y divide-gray-900 border-x border-gray-900 bg-gray-900 bg-opacity-50`}
+      >
+        ${repeat(
+          leg.stops,
+          (p) => leg.index + p.chainId + p.outcome,
+          (p) => this.renderStatusRow(p),
+        )}
+      </div>
+    </div>
+  `;
   }
 
   renderHumanized(hxcm: HumanizedXcm) {
@@ -108,17 +160,13 @@ export class Journey extends TwElement {
       <div
         class=${tw`w-full flex p-4 justify-between items-center space-x-3 bg-gray-900 bg-opacity-80`}
       >
-        <div class=${tw`flex items-center space-x-2`}>
+        <div class=${tw`flex items-center space-x-4`}>
           <span class=${tw`pr-4 text-gray-500`}
             >${this.renderHumanized(humanize(j))}</span
           >
-          ${this.iconForOutcome(j.origin)}
+          ${this.iconForOutcomeFromConsensus(j.origin)}
           <span class=${tw`text-gray-700`}>${IconArrow()}</span>
-          ${j.stops.map((stop) => this.iconForOutcome(stop))}
-          ${(j.stops.length > 0 &&
-            html`<span class=${tw`text-gray-700`}>${IconArrow()}</span>`) ||
-          ""}
-          ${this.iconForOutcome(j.destination)}
+          ${this.iconForOutcomeFromConsensus(j.destination)}
         </div>
         <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
       </div>
@@ -159,15 +207,11 @@ export class Journey extends TwElement {
             ></code-block>
           </div>`
         : ""}
-      <div
-        class=${tw`flex flex-col divide-y divide-gray-900 border-x border-gray-900 bg-gray-900 bg-opacity-50`}
-      >
-        ${repeat(
-          [j.origin, ...j.stops, j.destination],
-          (p) => j.id + p.chainId + p.outcome,
-          (p) => this.renderStatusRow(p),
-        )}
-      </div>
+      ${repeat(
+        j.legs,
+        (l) => j.id + l.index,
+        (l) => this.renderLeg(l),
+      )}
     </div>`;
   }
 }
