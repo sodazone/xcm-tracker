@@ -1,6 +1,10 @@
 import { blake3 } from "hash-wasm";
 
-import { XcmNotifyMessage, AnyJson } from "@sodazone/ocelloids-client";
+import {
+  XcmNotifyMessage,
+  AnyJson,
+  SignerData,
+} from "@sodazone/ocelloids-client";
 
 const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -24,9 +28,15 @@ export type XcmJourneyWaypoint = {
   timeout?: boolean;
 };
 
+export type TypedXcmJourneyWaypoint = {
+  event?: {
+    eventId: string;
+  };
+} & Omit<XcmJourneyWaypoint, "event">;
+
 export type XcmJourney = {
   id: string;
-  sender: AnyJson;
+  sender: SignerData;
   updated: number;
   created: string;
   instructions: unknown;
@@ -34,6 +44,12 @@ export type XcmJourney = {
   destination: XcmJourneyWaypoint;
   stops: XcmJourneyWaypoint[];
 };
+
+export type TypedXcmJourney = {
+  origin: TypedXcmJourneyWaypoint;
+  destination: TypedXcmJourneyWaypoint;
+  stops: TypedXcmJourneyWaypoint[];
+} & Omit<XcmJourney, "origin" | "destination" | "stops">;
 
 export async function toJourneyId({
   origin,
