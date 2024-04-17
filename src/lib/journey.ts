@@ -65,7 +65,6 @@ function updateFailures(journey: XcmJourney): XcmJourney {
   if (failureLegIndex === -1) {
     return journey;
   }
-  console.log("failure leg index", failureLegIndex);
 
   journey.destination.outcome = "Fail";
   journey.destination.skipped = true;
@@ -170,16 +169,13 @@ export async function mergeJourney(
 
   if (journey.origin.chainId === xcm.waypoint.chainId) {
     journey.origin = xcm.waypoint;
-    // return { ...journey };
   }
 
   if (journey.destination.chainId === xcm.waypoint.chainId) {
     if (xcm.waypoint.outcome) {
       journey.updated = Date.now();
       journey.destination = xcm.waypoint;
-      // return { ...journey };
     }
-    // return journey;
   }
 
   journey.updated = Date.now();
