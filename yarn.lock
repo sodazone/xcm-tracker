@@ -462,9 +462,9 @@
   integrity sha512-UKXUQNbO3DOhzLRwHSpa0HnhhCgNODvfoPWv2FCXme8N/ANFfhIPMGuOT+QuKd16+B5yxZ0HdpNlqPvTMS1qfw==
 
 "@sodazone/ocelloids-client@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sodazone/ocelloids-client/-/ocelloids-client-1.0.0.tgz#fdb49541b7053d1a4a83d3051ee0f14c4744dd88"
-  integrity sha512-xKSQRWuDuUx6S27ingIebBrFS6STSgJWz5rbBielozhbWA8krc/U+SXG6JGz84J0gyVtknj+dWxXCcFklhzggw==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@sodazone/ocelloids-client/-/ocelloids-client-1.0.1.tgz#6298ae93d2583628bf23b7587ddb5f77d8ed3774"
+  integrity sha512-DX5i5yiFyJXq4lh0is9QYPvDA/54lcKd38hSH9T+pM6Qp3O1ch7dadoiL1ZQ+aP2mX9xpP7zY43b4iaZMopIrg==
   dependencies:
     isows "^1.0.3"
 
@@ -1839,6 +1839,7 @@ source-map-js@^1.2.0:
   integrity sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
