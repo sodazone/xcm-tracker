@@ -4,8 +4,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { animate, fadeInSlow } from "@lit-labs/motion";
 
 import {
-  XcmJourney,
-  XcmJourneyLeg,
+  TypedXcmJourney,
+  TypedXcmJourneyWaypoint,
   XcmJourneyWaypoint,
 } from "../lib/journey.js";
 import { tw } from "../style.js";
@@ -34,7 +34,7 @@ export class Journey extends TwElement {
   @property({
     type: Object,
   })
-  data: XcmJourney;
+  data: TypedXcmJourney;
 
   @state() selected: XcmJourneyWaypoint;
 
@@ -85,7 +85,7 @@ export class Journey extends TwElement {
     this.selected = undefined;
   }
 
-  renderStatusRow(point: XcmJourneyWaypoint) {
+  renderStatusRow(point: TypedXcmJourneyWaypoint) {
     return html`
       <div
         class=${tw`flex w-full items-center justify-between px-6 py-4`}

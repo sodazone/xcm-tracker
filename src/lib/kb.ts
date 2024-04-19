@@ -1,4 +1,3 @@
-import { AnyJson } from "@sodazone/ocelloids-client";
 import { XcmJourney } from "./journey.js";
 import { chainName, trunc } from "./utils.js";
 
@@ -15,11 +14,43 @@ export type HumanizedXcm = {
   from: string;
 };
 
+interface XcmInstructionSchema {
+  InitiateReserveWithdraw: unknown;
+  InitiateTeleport: unknown;
+  DepositReserveAsset: unknown;
+  TransferReserveAsset: unknown;
+  Transact: unknown;
+  WithdrawAsset: unknown;
+  ReserveAssetDeposited: unknown;
+  DepositAsset: {
+    beneficiary: {
+      interior: {
+        X1: {
+          AccountId32: {
+            id: string;
+          };
+          AccountKey20: {
+            key: string;
+          };
+          Parachain: string;
+        };
+      };
+    };
+  };
+  ReceiveTeleportedAsset: unknown;
+  ExportMessage: unknown;
+}
+
+interface XcmInstruction extends Partial<XcmInstructionSchema> {}
+interface XcmInstructionXcm extends XcmInstruction {
+  xcm: XcmInstruction[];
+}
+
 // WARN: this should be extracted to production rules kb
 // eslint-disable-next-line complexity
 export function humanize(journey: XcmJourney) {
   const { sender, origin, destination } = journey;
-  const versioned = Object.values(origin.instructions)[0] as AnyJson[];
+  const versioned: XcmInstruction[] = Object.values(origin.instructions)[0];
   const hopTransfer = versioned.find(
     (op) =>
       op.InitiateReserveWithdraw ||
@@ -46,13 +77,13 @@ export function humanize(journey: XcmJourney) {
   // Extract beneficiary
   let deposit = versioned.find((op) => op.DepositAsset !== undefined);
   if (hopTransfer) {
-    deposit = (
-      (Object.values(hopTransfer)[0] as AnyJson).xcm as AnyJson[]
-    ).find((op) => op.DepositAsset !== undefined);
+    deposit = (Object.values(hopTransfer)[0] as XcmInstructionXcm).xcm.find(
+      (op) => op.DepositAsset !== undefined,
+    );
   }
   if (bridgeMessage) {
     deposit = (
-      (Object.values(bridgeMessage)[0] as AnyJson).xcm as AnyJson[]
+      (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm
     ).find((op) => op.DepositAsset !== undefined);
   }
   const X1 = deposit.DepositAsset.beneficiary.interior.X1;
