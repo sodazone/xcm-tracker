@@ -11,20 +11,17 @@ import { tw } from "../style.js";
 
 @customElement("oc-all-subscriptions")
 export class AllSubscriptions extends OcelloidsElement {
-  private subscriptions: Subscription<xcm.XcmMessagePayload>[] = [];
+  private subscriptions: Subscription<xcm.XcmInputs>[] = [];
 
-  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(
-    this,
-    {
-      task: async (_, { signal }) => {
-        this.subscriptions = await this.client.allSubscriptions("xcm", {
-          signal,
-        });
-        return this.subscriptions;
-      },
-      args: () => [],
+  private _getSubscriptions = new Task<Subscription<xcm.XcmInputs>[]>(this, {
+    task: async (_, { signal }) => {
+      this.subscriptions = await this.client.allSubscriptions("xcm", {
+        signal,
+      });
+      return this.subscriptions;
     },
-  );
+    args: () => [],
+  });
 
   renderSubscriptions() {
     return html`<div class=${tw`flex flex-col`}>

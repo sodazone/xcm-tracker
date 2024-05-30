@@ -17,20 +17,17 @@ export class SelectSubscriptions extends OcelloidsElement {
   @state({
     hasChanged: () => false,
   })
-  private subscriptions: Subscription<xcm.XcmMessagePayload>[] = [];
+  private subscriptions: Subscription<xcm.XcmInputs>[] = [];
 
-  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(
-    this,
-    {
-      task: async (_, { signal }) => {
-        this.subscriptions = await this.client.allSubscriptions("xcm", {
-          signal,
-        });
-        return this.subscriptions;
-      },
-      args: () => [],
+  private _getSubscriptions = new Task<Subscription<xcm.XcmInputs>[]>(this, {
+    task: async (_, { signal }) => {
+      this.subscriptions = await this.client.allSubscriptions("xcm", {
+        signal,
+      });
+      return this.subscriptions;
     },
-  );
+    args: () => [],
+  });
 
   constructor() {
     super();

@@ -29,7 +29,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   @property({
     type: Array,
   })
-  subscriptions: Subscription[];
+  subscriptions: Subscription<xcm.XcmInputs>[];
 
   @state()
   private journeys = new FixedSizedCache<XcmJourney>();
