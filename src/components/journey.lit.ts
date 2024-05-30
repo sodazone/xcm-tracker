@@ -6,6 +6,7 @@ import { animate, fadeInSlow } from "@lit-labs/motion";
 import {
   TypedXcmJourney,
   TypedXcmJourneyWaypoint,
+  XcmJourneyLeg,
   XcmJourneyWaypoint,
 } from "../lib/journey.js";
 import { tw } from "../style.js";
@@ -134,7 +135,7 @@ export class Journey extends TwElement {
         ${repeat(
           leg.stops,
           (p) => leg.index + p.chainId + p.outcome,
-          (p) => this.renderStatusRow(p),
+          (p) => this.renderStatusRow(p as TypedXcmJourneyWaypoint),
         )}
       </div>
     </div>

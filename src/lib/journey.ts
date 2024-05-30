@@ -1,7 +1,7 @@
 import { blake3 } from "hash-wasm";
 
 import {
-  XcmNotifyMessage,
+  xcm,
   AnyJson,
   SignerData,
 } from "@sodazone/ocelloids-client";
@@ -31,6 +31,8 @@ export type XcmJourneyWaypoint = {
 export type TypedXcmJourneyWaypoint = {
   event?: {
     eventId: string;
+    section: string;
+    method: string;
   };
 } & Omit<XcmJourneyWaypoint, "event">;
 
@@ -63,7 +65,7 @@ export async function toJourneyId({
   messageId,
   forwardId,
   waypoint: { messageHash },
-}: XcmNotifyMessage) {
+}: xcm.XcmMessagePayload) {
   if (forwardId !== undefined) {
     return Promise.resolve(forwardId);
   }
@@ -130,7 +132,7 @@ function updateTimeout(journey: XcmJourney) {
   return journey;
 }
 
-async function toJourney(xcm: XcmNotifyMessage): Promise<XcmJourney> {
+async function toJourney(xcm: xcm.XcmMessagePayload): Promise<XcmJourney> {
   const legs: XcmJourneyLeg[] = [];
   for (let index = 0; index < xcm.legs.length; index++) {
     const { from, to, relay, type } = xcm.legs[index];
@@ -172,7 +174,7 @@ async function toJourney(xcm: XcmNotifyMessage): Promise<XcmJourney> {
 }
 
 export async function mergeJourney(
-  xcm: XcmNotifyMessage,
+  xcm: xcm.XcmMessagePayload,
   journey?: XcmJourney,
 ): Promise<XcmJourney> {
   if (journey === undefined) {

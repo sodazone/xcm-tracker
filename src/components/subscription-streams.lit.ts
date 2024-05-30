@@ -3,11 +3,11 @@ import { repeat } from "lit/directives/repeat.js";
 import { customElement, property, state } from "lit/decorators.js";
 import { animate, fadeIn, fadeOut } from "@lit-labs/motion";
 
-import { XcmNotifyMessage, Subscription } from "@sodazone/ocelloids-client";
+import { xcm, Subscription, NotifyMessage } from "@sodazone/ocelloids-client";
 
 import "./journey.lit.js";
 import { OcelloidsElement } from "../base/ocelloids.lit.js";
-import { XcmJourney, mergeJourney, toJourneyId } from "../lib/journey.js";
+import { TypedXcmJourney, XcmJourney, mergeJourney, toJourneyId } from "../lib/journey.js";
 import { tw } from "../style.js";
 import { IconChain, IconPulse } from "../icons/index.js";
 import { trunc } from "../lib/utils.js";
@@ -41,9 +41,10 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     super();
   }
 
-  async onMessage(xcm: XcmNotifyMessage) {
-    console.log("XCM", xcm);
+  async onMessage(msg: NotifyMessage<xcm.XcmMessagePayload>) {
+    console.log("MSG", msg);
 
+    const xcm = msg.payload;
     const id = await toJourneyId(xcm);
     const journey = this.journeys.get(id);
 
@@ -55,9 +56,9 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   }
 
   renderSubscriptionDetails() {
-    const origins = uniques(this.subscriptions.map((s) => s.origin));
-    const destinations = uniques(this.subscriptions.map((s) => s.destinations));
-    const senders = uniques(this.subscriptions.map((s) => s.senders ?? "*"));
+    const origins = uniques(this.subscriptions.map((s) => s.args.origin));
+    const destinations = uniques(this.subscriptions.map((s) => s.args.destinations));
+    const senders = uniques(this.subscriptions.map((s) => s.args.senders ?? "*"));
 
     return html`
       <div
@@ -105,7 +106,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
                   out: fadeOut,
                 })}
               >
-                <oc-journey class=${tw`flex w-full`} .data=${j}> </oc-journey>
+                <oc-journey class=${tw`flex w-full`} .data=${j as TypedXcmJourney}> </oc-journey>
               </li>
             `,
           )}
@@ -141,7 +142,10 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
       for (const subscription of this.subscriptions) {
         this.connections.push(
-          this.client.subscribe(subscription.id, {
+          this.client.subscribe({
+            agentId: "xcm",
+            subscriptionId: subscription.id
+          }, {
             onMessage: this.onMessage.bind(this),
           }),
         );
