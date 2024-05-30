@@ -1,13 +1,13 @@
-import { html } from "lit";
 import { Task } from "@lit/task";
+import { html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import { Subscription, xcm } from "@sodazone/ocelloids-client";
 
 import "./subscription-streams.lit.js";
 import { OcelloidsElement } from "../base/ocelloids.lit.js";
-import { tw } from "../style.js";
 import { IconChevron, IconSpinner } from "../icons/index.js";
+import { tw } from "../style.js";
 
 @customElement("oc-select-subscription")
 export class SelectSubscriptions extends OcelloidsElement {
@@ -19,13 +19,18 @@ export class SelectSubscriptions extends OcelloidsElement {
   })
   private subscriptions: Subscription<xcm.XcmMessagePayload>[] = [];
 
-  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(this, {
-    task: async (_, { signal }) => {
-      this.subscriptions = await this.client.allSubscriptions("xcm", { signal });
-      return this.subscriptions;
+  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(
+    this,
+    {
+      task: async (_, { signal }) => {
+        this.subscriptions = await this.client.allSubscriptions("xcm", {
+          signal,
+        });
+        return this.subscriptions;
+      },
+      args: () => [],
     },
-    args: () => [],
-  });
+  );
 
   constructor() {
     super();
@@ -58,8 +63,9 @@ export class SelectSubscriptions extends OcelloidsElement {
   renderSubscriptions(subscriptions) {
     return html`<div class=${tw`flex flex-col`}>
       ${this.renderSelect(subscriptions)}
-      ${this.subscriptionId &&
-      html`
+      ${
+        this.subscriptionId &&
+        html`
         <oc-subscription-streams
           .mocked=${false}
           class=${tw`flex flex-col`}
@@ -68,7 +74,8 @@ export class SelectSubscriptions extends OcelloidsElement {
           ]}
         >
         </oc-subscription-streams>
-      `}
+      `
+      }
     </div>`;
   }
 

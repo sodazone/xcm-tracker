@@ -1,25 +1,30 @@
-import { html } from "lit";
 import { Task } from "@lit/task";
+import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { Subscription, xcm } from "@sodazone/ocelloids-client";
 
 import "./subscription-streams.lit.js";
 import { OcelloidsElement } from "../base/ocelloids.lit.js";
-import { tw } from "../style.js";
 import { IconSpinner } from "../icons/index.js";
+import { tw } from "../style.js";
 
 @customElement("oc-all-subscriptions")
 export class AllSubscriptions extends OcelloidsElement {
   private subscriptions: Subscription<xcm.XcmMessagePayload>[] = [];
 
-  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(this, {
-    task: async (_, { signal }) => {
-      this.subscriptions = await this.client.allSubscriptions("xcm", { signal });
-      return this.subscriptions;
+  private _getSubscriptions = new Task<Subscription<xcm.XcmMessagePayload>[]>(
+    this,
+    {
+      task: async (_, { signal }) => {
+        this.subscriptions = await this.client.allSubscriptions("xcm", {
+          signal,
+        });
+        return this.subscriptions;
+      },
+      args: () => [],
     },
-    args: () => [],
-  });
+  );
 
   renderSubscriptions() {
     return html`<div class=${tw`flex flex-col`}>

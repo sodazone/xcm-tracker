@@ -1,7 +1,7 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import Prism from "prismjs";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import Prism from "prismjs";
 
 import { TwElement } from "../base/tw.lit";
 import { tw } from "../style.js";

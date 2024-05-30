@@ -26,29 +26,31 @@ export class SubscriptionsElement extends TwElement {
         <ul class=${tw("grid grid-cols-2 list-none")}>
           <li
             @click=${() => (this.selected = "all")}
-            class=${tw(
-              "flex justify-center border-t-2 cursor-pointer uppercase border-r border-r-gray-900",
-            ) +
-            " " +
-            tw(
-              this.selected === "all"
-                ? "border-t-yellow-500 font-semibold"
-                : "border-t-transparent",
-            )}
+            class=${
+              tw(
+                "flex justify-center border-t-2 cursor-pointer uppercase border-r border-r-gray-900",
+              ) +
+              " " +
+              tw(
+                this.selected === "all"
+                  ? "border-t-yellow-500 font-semibold"
+                  : "border-t-transparent",
+              )
+            }
           >
             <span class=${tw("inline-block py-2 px-3")}> All Networks </span>
           </li>
           <li
             @click=${() => (this.selected = "select")}
-            class=${tw(
-              "flex justify-center border-t-2 cursor-pointer uppercase",
-            ) +
-            " " +
-            tw(
-              this.selected === "select"
-                ? "border-t-yellow-500 font-semibold"
-                : "border-t-transparent",
-            )}
+            class=${
+              tw("flex justify-center border-t-2 cursor-pointer uppercase") +
+              " " +
+              tw(
+                this.selected === "select"
+                  ? "border-t-yellow-500 font-semibold"
+                  : "border-t-transparent",
+              )
+            }
           >
             <span class=${tw("inline-block py-2 px-3")}>
               Select Subscription

@@ -1,10 +1,6 @@
 import { blake3 } from "hash-wasm";
 
-import {
-  xcm,
-  AnyJson,
-  SignerData,
-} from "@sodazone/ocelloids-client";
+import { AnyJson, SignerData, xcm } from "@sodazone/ocelloids-client";
 
 const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
   year: "numeric",

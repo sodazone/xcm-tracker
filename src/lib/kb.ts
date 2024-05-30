@@ -82,9 +82,9 @@ export function humanize(journey: XcmJourney) {
     );
   }
   if (bridgeMessage) {
-    deposit = (
-      (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm
-    ).find((op) => op.DepositAsset !== undefined);
+    deposit = (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm.find(
+      (op) => op.DepositAsset !== undefined,
+    );
   }
   const X1 = deposit.DepositAsset.beneficiary.interior.X1;
   let beneficiary = "unknown";

@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import { html } from "lit";
 
-import { tw } from "../style.js";
 import { XcmJourneyType } from "../lib/kb.js";
+import { tw } from "../style.js";
 
 export function IconArrow() {
   return html`
@@ -902,12 +902,12 @@ function getIconByChainId(id) {
   }
 }
 
-export function IconChain(id, size: 'md' | 'sm' | 'xs' = 'md') {
+export function IconChain(id, size: "md" | "sm" | "xs" = "md") {
   const styles = {
-   md: tw`h-6 w-6 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
-   sm: tw`h-5 w-5 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
-   xs: tw`h-4 w-4 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`
-  }
+    md: tw`h-6 w-6 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
+    sm: tw`h-5 w-5 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
+    xs: tw`h-4 w-4 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
+  };
   return html`
     <div class=${tw`flex items-center`}>
       <div
