@@ -487,7 +487,7 @@ function getIconByChainId(id) {
     case "urn:ocn:polkadot:2004": // moonbeam
       return html`
         <svg
-   class=${tw`w-full w-full`}
+   class=${tw`w-full w-full rounded-full`}
    viewBox="0 0 256 256"
    fill="none"
    version="1.1"

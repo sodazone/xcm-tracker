@@ -55,18 +55,12 @@ export type TypedXcmJourney = {
   stops: TypedXcmJourneyWaypoint[];
 } & Omit<XcmJourney, "origin" | "destination" | "stops">;
 
-export async function toJourneyId({
-  origin,
-  destination,
-  messageId,
-  forwardId,
-  waypoint: { messageHash },
-}: xcm.XcmMessagePayload) {
+export async function toJourneyId({ origin, messageId, forwardId, waypoint: { messageHash } }: xcm.XcmMessagePayload) {
   if (forwardId !== undefined) {
     return Promise.resolve(forwardId);
   }
   return messageId === undefined
-    ? await blake3(`${origin.chainId}:${origin.blockNumber}|${destination.chainId}|${messageHash}`)
+    ? await blake3(`${origin.chainId}:${origin.blockNumber}|${messageHash}`)
     : Promise.resolve(messageId);
 }
 

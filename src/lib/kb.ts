@@ -77,14 +77,18 @@ export function humanize(journey: XcmJourney) {
   if (bridgeMessage) {
     deposit = (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm.find((op) => op.DepositAsset !== undefined);
   }
-  const X1 = deposit.DepositAsset.beneficiary.interior.X1;
+
   let beneficiary = "unknown";
-  if (X1?.AccountId32) {
-    beneficiary = X1.AccountId32.id;
-  } else if (X1?.AccountKey20) {
-    beneficiary = X1.AccountKey20.key;
-  } else if (X1?.Parachain) {
-    beneficiary = X1.Parachain;
+
+  if (deposit !== undefined) {
+    const X1 = deposit.DepositAsset.beneficiary.interior.X1;
+    if (X1?.AccountId32) {
+      beneficiary = X1.AccountId32.id;
+    } else if (X1?.AccountKey20) {
+      beneficiary = X1.AccountKey20.key;
+    } else if (X1?.Parachain) {
+      beneficiary = X1.Parachain;
+    }
   }
 
   const signer = sender?.signer;

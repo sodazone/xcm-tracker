@@ -1,4 +1,4 @@
-import samples from "../../.misc/data/samples.json";
+import samples from "../../.misc/data/samples-hop.json";
 
 export function sender(cb) {
   let index = 0;
