@@ -1,5 +1,5 @@
 import { XcmJourney } from "./journey.js";
-import { chainName, trunc } from "./utils.js";
+import { chainName, toAddress, trunc } from "./utils.js";
 
 export enum XcmJourneyType {
   Transfer = "transfer",
@@ -83,7 +83,7 @@ export function humanize(journey: XcmJourney) {
   if (deposit !== undefined) {
     const X1 = deposit.DepositAsset.beneficiary.interior.X1;
     if (X1?.AccountId32) {
-      beneficiary = X1.AccountId32.id;
+      beneficiary = toAddress(X1.AccountId32.id, destination.chainId);
     } else if (X1?.AccountKey20) {
       beneficiary = X1.AccountKey20.key;
     } else if (X1?.Parachain) {
