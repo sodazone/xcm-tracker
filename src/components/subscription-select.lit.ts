@@ -21,7 +21,7 @@ export class SelectSubscriptions extends OcelloidsElement {
 
   private _getSubscriptions = new Task<Subscription<xcm.XcmInputs>[]>(this, {
     task: async (_, { signal }) => {
-      this.subscriptions = await this.client.allSubscriptions("xcm", {
+      this.subscriptions = await this.client.agent<xcm.XcmInputs>("xcm").allSubscriptions({
         signal,
       });
       return this.subscriptions;
@@ -49,9 +49,7 @@ export class SelectSubscriptions extends OcelloidsElement {
           @change=${this.onSelected}
         >
           <option selected disabled hidden>Select a subscription…</option>
-          ${subscriptions.map(
-            (s) => html`<option value=${s.id}>${s.id}</option>`,
-          )}
+          ${subscriptions.map((s) => html`<option value=${s.id}>${s.id}</option>`)}
         </select>
       </div>
     </div>`;
@@ -66,9 +64,7 @@ export class SelectSubscriptions extends OcelloidsElement {
         <oc-subscription-streams
           .mocked=${false}
           class=${tw`flex flex-col`}
-          .subscriptions=${[
-            this.subscriptions.find((s) => s.id === this.subscriptionId),
-          ]}
+          .subscriptions=${[this.subscriptions.find((s) => s.id === this.subscriptionId)]}
         >
         </oc-subscription-streams>
       `
@@ -78,8 +74,7 @@ export class SelectSubscriptions extends OcelloidsElement {
 
   render() {
     return this._getSubscriptions.render({
-      pending: () =>
-        html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
+      pending: () => html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
       complete: (s) => this.renderSubscriptions(s),
       error: (e) => html`<div>error: ${e}</div>`,
     });

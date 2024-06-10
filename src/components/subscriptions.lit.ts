@@ -27,15 +27,9 @@ export class SubscriptionsElement extends TwElement {
           <li
             @click=${() => (this.selected = "all")}
             class=${
-              tw(
-                "flex justify-center border-t-2 cursor-pointer uppercase border-r border-r-gray-900",
-              ) +
+              tw("flex justify-center border-t-2 cursor-pointer uppercase border-r border-r-gray-900") +
               " " +
-              tw(
-                this.selected === "all"
-                  ? "border-t-yellow-500 font-semibold"
-                  : "border-t-transparent",
-              )
+              tw(this.selected === "all" ? "border-t-yellow-500 font-semibold" : "border-t-transparent")
             }
           >
             <span class=${tw("inline-block py-2 px-3")}> All Networks </span>
@@ -45,11 +39,7 @@ export class SubscriptionsElement extends TwElement {
             class=${
               tw("flex justify-center border-t-2 cursor-pointer uppercase") +
               " " +
-              tw(
-                this.selected === "select"
-                  ? "border-t-yellow-500 font-semibold"
-                  : "border-t-transparent",
-              )
+              tw(this.selected === "select" ? "border-t-yellow-500 font-semibold" : "border-t-transparent")
             }
           >
             <span class=${tw("inline-block py-2 px-3")}>

@@ -52,11 +52,7 @@ export function humanize(journey: XcmJourney) {
   const { sender, origin, destination } = journey;
   const versioned: XcmInstruction[] = Object.values(origin.instructions)[0];
   const hopTransfer = versioned.find(
-    (op) =>
-      op.InitiateReserveWithdraw ||
-      op.InitiateTeleport ||
-      op.DepositReserveAsset ||
-      op.TransferReserveAsset,
+    (op) => op.InitiateReserveWithdraw || op.InitiateTeleport || op.DepositReserveAsset || op.TransferReserveAsset,
   );
   const bridgeMessage = versioned.find((op) => op.ExportMessage);
 
@@ -64,8 +60,7 @@ export function humanize(journey: XcmJourney) {
   if (versioned.find((op) => op.Transact)) {
     type = XcmJourneyType.Transact;
   } else if (
-    (versioned.find((op) => op.WithdrawAsset || op.ReserveAssetDeposited) &&
-      versioned.find((op) => op.DepositAsset)) ||
+    (versioned.find((op) => op.WithdrawAsset || op.ReserveAssetDeposited) && versioned.find((op) => op.DepositAsset)) ||
     hopTransfer ||
     bridgeMessage
   ) {
@@ -77,14 +72,10 @@ export function humanize(journey: XcmJourney) {
   // Extract beneficiary
   let deposit = versioned.find((op) => op.DepositAsset !== undefined);
   if (hopTransfer) {
-    deposit = (Object.values(hopTransfer)[0] as XcmInstructionXcm).xcm.find(
-      (op) => op.DepositAsset !== undefined,
-    );
+    deposit = (Object.values(hopTransfer)[0] as XcmInstructionXcm).xcm.find((op) => op.DepositAsset !== undefined);
   }
   if (bridgeMessage) {
-    deposit = (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm.find(
-      (op) => op.DepositAsset !== undefined,
-    );
+    deposit = (Object.values(bridgeMessage)[0] as XcmInstructionXcm).xcm.find((op) => op.DepositAsset !== undefined);
   }
   const X1 = deposit.DepositAsset.beneficiary.interior.X1;
   let beneficiary = "unknown";

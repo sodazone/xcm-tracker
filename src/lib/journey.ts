@@ -66,16 +66,12 @@ export async function toJourneyId({
     return Promise.resolve(forwardId);
   }
   return messageId === undefined
-    ? await blake3(
-        `${origin.chainId}:${origin.blockNumber}|${destination.chainId}|${messageHash}`,
-      )
+    ? await blake3(`${origin.chainId}:${origin.blockNumber}|${destination.chainId}|${messageHash}`)
     : Promise.resolve(messageId);
 }
 
 function updateFailures(journey: XcmJourney): XcmJourney {
-  const failureLegIndex = journey.legs.findIndex(
-    (l) => l.stops.find((s) => s.outcome === "Fail") !== undefined,
-  );
+  const failureLegIndex = journey.legs.findIndex((l) => l.stops.find((s) => s.outcome === "Fail") !== undefined);
   if (failureLegIndex === -1) {
     return journey;
   }
@@ -97,9 +93,7 @@ function updateFailures(journey: XcmJourney): XcmJourney {
         };
       } else if (i === failureLegIndex) {
         const stopIndex = l.stops.findIndex((s) => s.outcome === "Fail");
-        l.stops = l.stops.map((s, i) =>
-          i > stopIndex ? { ...s, outcome: "Fail", skipped: true } : s,
-        );
+        l.stops = l.stops.map((s, i) => (i > stopIndex ? { ...s, outcome: "Fail", skipped: true } : s));
         return l;
       } else {
         return l;
@@ -144,9 +138,7 @@ async function toJourney(xcm: xcm.XcmMessagePayload): Promise<XcmJourney> {
     leg.stops.push({ chainId: to });
 
     if (xcm.waypoint.legIndex === index) {
-      leg.stops = leg.stops.map((s) =>
-        s.chainId === xcm.waypoint.chainId ? { ...xcm.waypoint } : s,
-      );
+      leg.stops = leg.stops.map((s) => (s.chainId === xcm.waypoint.chainId ? { ...xcm.waypoint } : s));
     }
     legs.push(leg);
   }
@@ -169,10 +161,7 @@ async function toJourney(xcm: xcm.XcmMessagePayload): Promise<XcmJourney> {
   });
 }
 
-export async function mergeJourney(
-  xcm: xcm.XcmMessagePayload,
-  journey?: XcmJourney,
-): Promise<XcmJourney> {
+export async function mergeJourney(xcm: xcm.XcmMessagePayload, journey?: XcmJourney): Promise<XcmJourney> {
   if (journey === undefined) {
     journey = await toJourney(xcm);
   }
@@ -195,9 +184,7 @@ export async function mergeJourney(
   journey.updated = Date.now();
 
   const leg = journey.legs[xcm.waypoint.legIndex];
-  const stopIndex = leg.stops.findIndex(
-    (s) => s.chainId === xcm.waypoint.chainId,
-  );
+  const stopIndex = leg.stops.findIndex((s) => s.chainId === xcm.waypoint.chainId);
   if (stopIndex === -1) {
     console.log("CANNOT FIND STOP!");
     return journey;

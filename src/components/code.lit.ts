@@ -15,9 +15,7 @@ export class CodeBlock extends TwElement {
   code: string;
 
   renderCode() {
-    return unsafeHTML(
-      Prism.highlight(this.code, Prism.languages.javascript, "json"),
-    );
+    return unsafeHTML(Prism.highlight(this.code, Prism.languages.javascript, "json"));
   }
 
   render() {

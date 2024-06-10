@@ -19,12 +19,7 @@ import {
   IconTimeout,
   IconWait,
 } from "../icons/index.js";
-import {
-  TypedXcmJourney,
-  TypedXcmJourneyWaypoint,
-  XcmJourneyLeg,
-  XcmJourneyWaypoint,
-} from "../lib/journey.js";
+import { TypedXcmJourney, TypedXcmJourneyWaypoint, XcmJourneyLeg, XcmJourneyWaypoint } from "../lib/journey.js";
 import { HumanizedXcm, humanize } from "../lib/kb.js";
 import { tw } from "../style.js";
 
@@ -57,10 +52,7 @@ export class Journey extends TwElement {
     `;
   }
 
-  iconForOutcome(
-    { chainId, outcome, skipped, timeout }: XcmJourneyWaypoint,
-    withChain = true,
-  ) {
+  iconForOutcome({ chainId, outcome, skipped, timeout }: XcmJourneyWaypoint, withChain = true) {
     if (outcome === undefined) {
       if (timeout) {
         return withChain ? IconChainTimeout(chainId) : IconTimeout();
@@ -93,18 +85,10 @@ export class Journey extends TwElement {
         <div class=${tw`flex items-center justify-center space-x-4`}>
           ${this.iconForOutcomeFromConsensus(point)}
           <span
-            >${
-              point.event && Object.keys(point.event).length > 0
-                ? point.event.eventId
-                : point.blockNumber
-            }</span
+            >${point.event && Object.keys(point.event).length > 0 ? point.event.eventId : point.blockNumber}</span
           >
           <span class=${tw`ml-auto text-gray-400 text-xs font-mono capitalize`}
-            >${
-              point.event && Object.keys(point.event).length > 0
-                ? `${point.event.section} ${point.event.method}`
-                : ""
-            }</span
+            >${point.event && Object.keys(point.event).length > 0 ? `${point.event.section} ${point.event.method}` : ""}</span
           >
         </div>
         <div class=${tw`flex justify-end items-center space-x-4`}>
@@ -127,10 +111,7 @@ export class Journey extends TwElement {
   renderLeg(leg: XcmJourneyLeg) {
     const label =
       leg.type === "bridge"
-        ? "from " +
-          leg.stops
-            .map((s) => s.chainId.split(":")[2].toUpperCase())
-            .join(" to ")
+        ? "from " + leg.stops.map((s) => s.chainId.split(":")[2].toUpperCase()).join(" to ")
         : "on " + leg.stops[0].chainId.split(":")[2].toUpperCase();
     return html`
     <div>

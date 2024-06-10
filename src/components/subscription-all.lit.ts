@@ -15,7 +15,7 @@ export class AllSubscriptions extends OcelloidsElement {
 
   private _getSubscriptions = new Task<Subscription<xcm.XcmInputs>[]>(this, {
     task: async (_, { signal }) => {
-      this.subscriptions = await this.client.allSubscriptions("xcm", {
+      this.subscriptions = await this.client.agent<xcm.XcmInputs>("xcm").allSubscriptions({
         signal,
       });
       return this.subscriptions;
@@ -36,8 +36,7 @@ export class AllSubscriptions extends OcelloidsElement {
 
   render() {
     return this._getSubscriptions.render({
-      pending: () =>
-        html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
+      pending: () => html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
       complete: () => this.renderSubscriptions(),
       error: (e) => html`<div>error: ${e}</div>`,
     });
