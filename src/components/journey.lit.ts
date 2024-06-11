@@ -150,7 +150,7 @@ export class Journey extends TwElement {
 
   getPinIcon() {
     return html`
-      <button class=${tw`h-5 w-5 text-gray-300`} @click=${(_: Event) => this.firePinClickEvent()}>
+      <button class=${tw`h-4 w-4 text-gray-300`} @click=${(_: Event) => this.firePinClickEvent()}>
         ${this.pinned ? IconUnpin() : IconPin()}
       </button>
     `;

@@ -134,7 +134,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
             `,
           )}
         </ul>`
-      : html` <div class=${tw`flex items-center space-x-2 p-4`}>
+      : html` <div class=${tw`flex items-center space-x-2 p-4 bg-gray-900 bg-opacity-40 backdrop-blur`}>
           <span class=${tw`text-gray-200 uppercase`}>Waiting for events…</span>
           ${IconPulse()}
         </div>`;
