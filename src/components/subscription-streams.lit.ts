@@ -30,6 +30,9 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   private journeys = new FixedSizedCache<XcmJourney>();
 
   @state()
+  private pinned = new Map<string, XcmJourney>();
+
+  @state()
   private connections: WebSocket[] = [];
 
   @property({
@@ -46,11 +49,14 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
     const xcm = msg.payload;
     const id = await toJourneyId(xcm);
-    const journey = this.journeys.get(id);
 
-    const merged = await mergeJourney(xcm, journey);
-
-    this.journeys.set(id, merged);
+    const pinnedJourney = this.pinned.get(id);
+    if (pinnedJourney !== undefined) {
+      this.pinned.set(id, await mergeJourney(xcm, pinnedJourney));
+    } else {
+      const journey = this.journeys.get(id);
+      this.journeys.set(id, await mergeJourney(xcm, journey));
+    }
 
     this.requestUpdate();
   }
@@ -62,21 +68,21 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
     return html`
       <div
-        class=${tw`flex w-full text-sm items-center space-x-3 text-gray-500 px-4 border-b border-gray-900 divide-x divide-gray-900 bg-gray-900 bg-opacity-80`}
+        class=${tw`flex flex-col space-y-1 w-full text-sm md:items-center md:flex-row md:space-x-3 text-gray-500 px-4 border-b border-gray-900 md:divide-x md:divide-gray-900 bg-gray-900 bg-opacity-80`}
       >
-        <div class=${tw`flex flex-col space-y-2 pb-3 items-center`}>
+        <div class=${tw`flex flex-col space-y-2 pb-3 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Origins</span>
           <span class=${tw`flex -space-x-1`}>
             ${origins.map((origin) => IconChain(origin))}
           </span>
         </div>
-        <div class=${tw`flex flex-col space-y-2 pl-3 pb-3 items-center`}>
+        <div class=${tw`flex flex-col space-y-2 md:pl-3 pb-3 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Destinations</span>
           <span class=${tw`flex -space-x-1`}>
             ${destinations.map((destination) => IconChain(destination))}
           </span>
         </div>
-        <div class=${tw`flex flex-col space-y-2 pl-3 pb-4`}>
+        <div class=${tw`flex flex-col space-y-2 md:pl-3 pb-4`}>
           <span class=${tw`uppercase font-semibold`}>Senders</span>
           <span class=${tw`text-gray-200`}>
             ${senders.map((s) => trunc(s)).join(",")}
@@ -86,6 +92,18 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     `;
   }
 
+  pinJourney(_e: Event, key: string, journey: XcmJourney) {
+    this.pinned.set(key, journey);
+    this.journeys.delete(key);
+    this.requestUpdate();
+  }
+
+  unpinJourney(_e: Event, key: string, journey: XcmJourney) {
+    this.pinned.delete(key);
+    this.journeys.set(key, journey);
+    this.requestUpdate();
+  }
+
   renderJourneys() {
     const journeys = this.journeys.entries();
     return journeys.length > 0
@@ -93,8 +111,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
           ${repeat(
             journeys,
             ([id]) => id,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            ([_, j]) => html`
+            ([id, j]) => html`
               <li
                 ${animate({
                   keyframeOptions: {
@@ -106,7 +123,13 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
                   out: fadeOut,
                 })}
               >
-                <oc-journey class=${tw`flex w-full`} .data=${j as TypedXcmJourney}> </oc-journey>
+                <oc-journey
+                  class=${tw`flex w-full`}
+                  .data=${j as TypedXcmJourney}
+                  .pinned=${false}
+                  @pinClick=${(e: Event) => this.pinJourney(e, id, j)}
+                >
+                </oc-journey>
               </li>
             `,
           )}
@@ -115,6 +138,41 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
           <span class=${tw`text-gray-200 uppercase`}>Waiting for events…</span>
           ${IconPulse()}
         </div>`;
+  }
+
+  renderPinned() {
+    const journeys = [...this.pinned.entries()];
+    return journeys.length > 0
+      ? html` <ul>
+          ${repeat(
+            journeys,
+            ([id]) => id,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ([id, j]) => html`
+              <li
+                ${animate({
+                  keyframeOptions: {
+                    duration: 500,
+                    delay: 100,
+                    fill: "both",
+                  },
+                  in: fadeIn,
+                  out: fadeOut,
+                })}
+                
+              >
+                <oc-journey
+                  class=${tw`flex flex-grow`}
+                  .data=${j as TypedXcmJourney}
+                  .pinned=${true}
+                  @pinClick=${(e: Event) => this.unpinJourney(e, id, j)}
+                >
+                </oc-journey>
+              </li>
+            `,
+          )}
+        </ul>`
+      : "";
   }
 
   disconnectedCallback() {
@@ -155,6 +213,9 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
     return html` <div class=${tw`flex flex-col`}>
       ${this.renderSubscriptionDetails()}
+      <div class=${tw`w-full space-y-4 divide-y divide-gray-900`}>
+        ${this.renderPinned()}
+      </div>
       <div class=${tw`flex flex-col w-full space-y-4 divide-y divide-gray-900`}>
         ${this.renderJourneys()}
       </div>

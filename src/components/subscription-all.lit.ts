@@ -26,7 +26,7 @@ export class AllSubscriptions extends OcelloidsElement {
   renderSubscriptions() {
     return html`<div class=${tw`flex flex-col`}>
       <oc-subscription-streams
-        .mocked=${false}
+        .mocked=${true}
         class=${tw`flex flex-col`}
         .subscriptions=${this.subscriptions}
       >

@@ -14,9 +14,11 @@ import {
   IconChainTimeout,
   IconChainWait,
   IconFail,
+  IconPin,
   IconSkipped,
   IconSuccess,
   IconTimeout,
+  IconUnpin,
   IconWait,
 } from "../icons/index.js";
 import { TypedXcmJourney, TypedXcmJourneyWaypoint, XcmJourneyLeg, XcmJourneyWaypoint } from "../lib/journey.js";
@@ -31,6 +33,9 @@ export class Journey extends TwElement {
     type: Object,
   })
   data: TypedXcmJourney;
+
+  @property()
+  pinned: boolean;
 
   @state() selected: XcmJourneyWaypoint;
 
@@ -143,22 +148,38 @@ export class Journey extends TwElement {
     `;
   }
 
+  getPinIcon() {
+    return html`
+      <button class=${tw`h-5 w-5 text-gray-300`} @click=${(_: Event) => this.firePinClickEvent()}>
+        ${this.pinned ? IconUnpin() : IconPin()}
+      </button>
+    `;
+  }
+
+  firePinClickEvent() {
+    const event = new CustomEvent("pinClick");
+    this.dispatchEvent(event);
+  }
+
   render() {
     const j = this.data;
 
     return html`<div class=${tw`w-full`}>
       <div
-        class=${tw`w-full flex p-4 justify-between items-center space-x-3 bg-gray-900 bg-opacity-80`}
+        class=${tw`w-full flex p-4 items-center space-x-3 bg-gray-900 bg-opacity-80`}
       >
-        <div class=${tw`flex items-center space-x-4`}>
-          <span class=${tw`pr-4 text-gray-500`}
-            >${this.renderHumanized(humanize(j))}</span
-          >
-          ${this.iconForOutcomeFromConsensus(j.origin)}
-          <span class=${tw`text-gray-700`}>${IconArrow()}</span>
-          ${this.iconForOutcomeFromConsensus(j.destination)}
+        ${this.getPinIcon()}
+        <div class=${tw`flex w-full justify-between items-center`}>
+          <div class=${tw`flex items-center space-x-4`}>
+            <span class=${tw`pr-4 text-gray-500`}
+              >${this.renderHumanized(humanize(j))}</span
+            >
+            ${this.iconForOutcomeFromConsensus(j.origin)}
+            <span class=${tw`text-gray-700`}>${IconArrow()}</span>
+            ${this.iconForOutcomeFromConsensus(j.destination)}
+          </div>
+          <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
         </div>
-        <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
       </div>
       ${
         this.selected

@@ -1,4 +1,4 @@
-import { encodeAddress } from "@polkadot/util-crypto"
+import { encodeAddress } from "@polkadot/util-crypto";
 import { chains } from "../chains/index.js";
 
 export function trunc(str, len = 11, sep = "…") {
@@ -13,17 +13,17 @@ export function trunc(str, len = 11, sep = "…") {
 }
 
 export function chainName(id) {
-  const chain = chains[id]
+  const chain = chains[id];
   if (chain !== undefined) {
-    return chain.name
+    return chain.name;
   }
-  return id
+  return id;
 }
 
 export function toAddress(key: string, chainId: string) {
-  const chain = chains[chainId]
+  const chain = chains[chainId];
   if (chain !== undefined) {
-    return encodeAddress(key, chain.ss58)
+    return encodeAddress(key, chain.ss58);
   }
-  return key
+  return key;
 }

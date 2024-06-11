@@ -66,7 +66,7 @@ export class FixedSizedCache<T> {
 
       while (curr !== this.#tail) {
         keys.push(curr.key);
-        curr = curr.next;
+        curr = curr.prev;
       }
 
       keys.push(curr.key);
@@ -94,8 +94,8 @@ export class FixedSizedCache<T> {
       if (this.length === 0) {
         this.#head = this.#tail = node;
       } else {
-        this.#head.prev = node;
-        node.next = this.#head;
+        this.#head.next = node;
+        node.prev = this.#head;
         this.#head = node;
       }
 
@@ -103,13 +103,33 @@ export class FixedSizedCache<T> {
         this.#data.delete(this.#tail.key);
         this.#refs.delete(this.#tail.key);
 
-        this.#tail = this.#tail.prev;
-        this.#tail.next = this.#head;
+        this.#tail = this.#tail.next;
+        this.#tail.prev = this.#head;
       } else {
         this.#length += 1;
       }
     }
 
     this.#data.set(key, value);
+  }
+
+  delete(key: string) {
+    const node = this.#refs.get(key);
+    const { prev: prevNode, next: nextNode } = node;
+    if (node === this.#head) {
+      if (prevNode.key !== "<empty>") {
+        prevNode.next = prevNode;
+        this.#head = prevNode;
+      }
+    } else if (node === this.#tail) {
+      nextNode.prev = nextNode;
+      this.#tail = nextNode;
+    } else {
+      nextNode.prev = prevNode;
+      prevNode.next = nextNode;
+    }
+    this.#data.delete(key);
+    this.#refs.delete(key);
+    this.#length -= 1;
   }
 }
