@@ -1,6 +1,7 @@
 import { animate, fadeInSlow } from "@lit-labs/motion";
 import { html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 
 import { TwElement } from "../base/tw.lit.js";
@@ -13,6 +14,8 @@ import {
   IconChainSuccess,
   IconChainTimeout,
   IconChainWait,
+  IconChevronDown,
+  IconChevronUp,
   IconFail,
   IconPin,
   IconSkipped,
@@ -26,6 +29,7 @@ import { HumanizedXcm, humanize } from "../lib/kb.js";
 import { tw } from "../style.js";
 
 import "./code.lit.js";
+import { chains } from "../chains/index.js";
 
 @customElement("oc-journey")
 export class Journey extends TwElement {
@@ -37,7 +41,7 @@ export class Journey extends TwElement {
   @property()
   pinned: boolean;
 
-  @state() selected: XcmJourneyWaypoint;
+  @state() expanded: boolean = false;
 
   // XXX just a quick hack
   iconForOutcomeFromConsensus(j: XcmJourneyWaypoint) {
@@ -73,25 +77,27 @@ export class Journey extends TwElement {
     }
   }
 
-  showXcmSource(_e: Event, item: XcmJourneyWaypoint) {
-    this.selected = item;
-  }
+  renderBlockInfo({ chainId, event, extrinsicId, blockNumber }: TypedXcmJourneyWaypoint) {
+    const subscan = chains[chainId]?.subscanLink;
+    if (event && Object.keys(event).length > 0) {
+      const xtId = extrinsicId ?? `${blockNumber}-0`;
+      const link = subscan ? `${subscan}/extrinsic/${xtId}?event=${event.eventId}` : undefined;
+      return html`<a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""}`}>${event.eventId}</a>`;
+    }
 
-  closeXcmSource() {
-    this.selected = undefined;
+    const link = subscan ? `${subscan}/block/${blockNumber}` : undefined;
+    return html`
+        <a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""}`}>${blockNumber}</a>`;
   }
 
   renderStatusRow(point: TypedXcmJourneyWaypoint) {
     return html`
       <div
         class=${tw`flex w-full items-center justify-between px-6 py-4`}
-        @click=${(e: Event) => this.showXcmSource(e, point)}
       >
         <div class=${tw`flex items-center justify-center space-x-4`}>
           ${this.iconForOutcomeFromConsensus(point)}
-          <span
-            >${point.event && Object.keys(point.event).length > 0 ? point.event.eventId : point.blockNumber}</span
-          >
+          ${this.renderBlockInfo(point)}
           <span class=${tw`ml-auto text-gray-400 text-xs font-mono capitalize`}
             >${point.event && Object.keys(point.event).length > 0 ? `${point.event.section} ${point.event.method}` : ""}</span
           >
@@ -111,6 +117,10 @@ export class Journey extends TwElement {
         </div>
       </div>
     `;
+  }
+
+  handleExpandClick() {
+    this.expanded = !this.expanded;
   }
 
   renderLeg(leg: XcmJourneyLeg) {
@@ -171,55 +181,68 @@ export class Journey extends TwElement {
         ${this.getPinIcon()}
         <div class=${tw`flex w-full justify-between items-center`}>
           <div class=${tw`flex items-center space-x-4`}>
-            <span class=${tw`pr-4 text-gray-500`}
-              >${this.renderHumanized(humanize(j))}</span
-            >
+            <span class=${tw`pr-4 text-gray-500`}>
+              ${this.renderHumanized(humanize(j))}
+            </span>
             ${this.iconForOutcomeFromConsensus(j.origin)}
             <span class=${tw`text-gray-700`}>${IconArrow()}</span>
             ${this.iconForOutcomeFromConsensus(j.destination)}
           </div>
-          <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
+          <div class=${tw`flex items-center space-x-2`}>
+            <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
+            <button class=${tw`h-5 w-5 text-gray-300 hover:text-gray-500`} @click=${this.handleExpandClick}>
+              ${this.expanded ? IconChevronUp() : IconChevronDown()}
+            </button>
+          </div>
         </div>
       </div>
       ${
-        this.selected
-          ? html` <div
+        this.expanded
+          ? html`
+          <div
             ${animate({
               in: fadeInSlow,
             })}
+            @click=${this.handleExpandClick}
+            class=${tw`flex flex-col`}
           >
             ${
-              this.selected.assetsTrapped
-                ? html` <div
-                    @click=${this.closeXcmSource}
-                    class=${tw`text-xs px-4 text-gray-400 capitalize bg-gray-600`}
-                  >
-                    Asset Trap
-                  </div>
-                  <code-block
-                    code=${JSON.stringify(this.selected.assetsTrapped, null, 2)}
-                  ></code-block>`
-                : ""
+              j.forwardId &&
+              html`
+                <div class=${tw`py-1 text-sm px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}>
+                  XCM Forward ID
+                </div>
+                <span class=${tw`text-sm text-mono bg-gray-700 py-4 px-6`}>
+                  ${j.forwardId}
+                </span>`
             }
+            ${
+              j.topicId &&
+              html`
+                <div class=${tw`py-1 text-sm px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}>
+                  XCM Topic ID
+                </div>
+                <span class=${tw`text-sm text-mono bg-gray-700 py-4 px-6`}>
+                  ${j.topicId}
+                </span>`
+            }
+
+            <div class=${tw`py-1 text-sm px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}>
+              XCM Origin Message Hash
+            </div>
+            <div class=${tw`text-sm text-mono bg-gray-700 py-4 px-6`}>
+              ${j.origin.messageHash}
+            </div>
             <div
-              @click=${this.closeXcmSource}
-              class=${tw`text-xs px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}
+              class=${tw`py-1 text-sm px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}
             >
               XCM Instructions
             </div>
             <code-block
-              code=${JSON.stringify(this.selected.instructions, null, 2)}
+              code=${JSON.stringify(j.instructions, null, 2)}
             ></code-block>
-            <div
-              @click=${this.closeXcmSource}
-              class=${tw`text-xs px-4 text-gray-400 capitalize bg-gray-600 border-t border-gray-600`}
-            >
-              Waypoint
-            </div>
-            <code-block
-              code=${JSON.stringify(this.selected, null, 2)}
-            ></code-block>
-          </div>`
+          </div>
+        `
           : ""
       }
       ${repeat(

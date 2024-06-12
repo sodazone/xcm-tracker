@@ -5,6 +5,7 @@ export enum XcmJourneyType {
   Transfer = "transfer",
   Teleport = "teleport",
   Transact = "transact",
+  QueryResponse = "queryResponse",
   Unknown = "??",
 }
 
@@ -39,6 +40,7 @@ interface XcmInstructionSchema {
   };
   ReceiveTeleportedAsset: unknown;
   ExportMessage: unknown;
+  QueryResponse: unknown;
 }
 
 interface XcmInstruction extends Partial<XcmInstructionSchema> {}
@@ -59,6 +61,8 @@ export function humanize(journey: XcmJourney) {
   let type = XcmJourneyType.Unknown;
   if (versioned.find((op) => op.Transact)) {
     type = XcmJourneyType.Transact;
+  } else if (versioned.find((op) => op.QueryResponse)) {
+    type = XcmJourneyType.QueryResponse;
   } else if (
     (versioned.find((op) => op.WithdrawAsset || op.ReserveAssetDeposited) && versioned.find((op) => op.DepositAsset)) ||
     hopTransfer ||

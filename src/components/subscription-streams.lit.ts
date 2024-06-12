@@ -147,7 +147,6 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
           ${repeat(
             journeys,
             ([id]) => id,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             ([id, j]) => html`
               <li
                 ${animate({
@@ -159,7 +158,6 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
                   in: fadeIn,
                   out: fadeOut,
                 })}
-                
               >
                 <oc-journey
                   class=${tw`flex flex-grow`}

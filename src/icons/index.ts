@@ -34,6 +34,18 @@ export function IconArrow() {
   `;
 }
 
+export function IconChevronUp() {
+  return html`
+  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m18.2929 15.2893c.3905-.3905.3905-1.0237 0-1.4142l-4.8922-4.88744c-.7812-.7804-2.047-.78009-2.8278.00069l-4.89033 4.89035c-.39052.3905-.39052 1.0237 0 1.4142.39053.3906 1.02369.3906 1.41422 0l4.18561-4.1856c.3906-.3905 1.0237-.3905 1.4142 0l4.1821 4.182c.3905.3905 1.0237.3905 1.4142 0z" fill="currentColor"/></svg>
+  `;
+}
+
+export function IconChevronDown() {
+  return html`
+  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m5.70711 9.71069c-.39053.39051-.39053 1.02371 0 1.41421l4.89219 4.8874c.7812.7804 2.047.7801 2.8278-.0006l4.8903-4.8904c.3906-.3905.3906-1.0237 0-1.41422-.3905-.39053-1.0237-.39053-1.4142 0l-4.1856 4.18562c-.3905.3906-1.0237.3905-1.4142 0l-4.18208-4.18201c-.39052-.39053-1.02369-.39053-1.41421 0z" fill="currentColor"/></svg>
+  `;
+}
+
 export function IconChevron() {
   return html`
     <svg
@@ -719,13 +731,11 @@ export function IconChain(id, size: "md" | "sm" | "xs" = "md") {
     xs: tw`h-4 w-4 z-10 flex items-center justify-center rounded-full bg-gray-800 ring-1 ring-gray-800`,
   };
   return html`
-    <div class=${tw`flex items-center`}>
       <div
         class=${styles[size]}
       >
         ${getIconByChainId(id)}
       </div>
-    </div>
   `;
 }
 
@@ -796,6 +806,11 @@ export function BadgeType(t: XcmJourneyType) {
         class=${tw`text-xs font-medium px-2.5 py-0.5 rounded bg-yellow-900 text-yellow-300`}
         >${t}</span
       >`;
+    case XcmJourneyType.QueryResponse:
+      return html`<span
+          class=${tw`text-xs font-medium px-2.5 py-0.5 rounded bg-pink-900 text-pink-300`}
+          >${t}</span
+        >`;
     default:
       return html`<span
         class=${tw`text-xs font-medium px-2.5 py-0.5 rounded bg-gray-700 text-gray-300`}

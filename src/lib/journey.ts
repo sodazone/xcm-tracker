@@ -13,11 +13,12 @@ const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
 
 export type XcmJourneyWaypoint = {
   chainId: string;
+  messageHash?: string;
   blockNumber?: string;
   outcome?: string;
   error?: AnyJson;
   event?: AnyJson;
-  extrinsic?: AnyJson;
+  extrinsicId?: string;
   instructions?: AnyJson;
   assetsTrapped?: AnyJson;
   skipped?: boolean;
@@ -47,6 +48,8 @@ export type XcmJourney = {
   origin: XcmJourneyWaypoint;
   destination: XcmJourneyWaypoint;
   legs: XcmJourneyLeg[];
+  topicId?: string;
+  forwardId?: string;
 };
 
 export type TypedXcmJourney = {
@@ -152,6 +155,8 @@ async function toJourney(xcm: xcm.XcmMessagePayload): Promise<XcmJourney> {
       ...xcm.destination,
     },
     legs,
+    topicId: xcm.messageId,
+    forwardId: xcm.forwardId,
   });
 }
 
