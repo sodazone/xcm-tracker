@@ -86,12 +86,19 @@ export function humanize(journey: XcmJourney) {
 
   if (deposit !== undefined) {
     const X1 = deposit.DepositAsset.beneficiary.interior.X1;
-    if (X1?.AccountId32) {
-      beneficiary = toAddress(X1.AccountId32.id, destination.chainId);
-    } else if (X1?.AccountKey20) {
-      beneficiary = X1.AccountKey20.key;
-    } else if (X1?.Parachain) {
-      beneficiary = X1.Parachain;
+
+    let maybeMultiAddress = X1
+
+    if (X1 && Array.isArray(X1)) {
+      maybeMultiAddress = X1[0]
+    } 
+    
+    if (maybeMultiAddress?.AccountId32) {
+      beneficiary = toAddress(maybeMultiAddress.AccountId32.id, destination.chainId);
+    } else if (maybeMultiAddress?.AccountKey20) {
+      beneficiary = maybeMultiAddress.AccountKey20.key;
+    } else if (maybeMultiAddress?.Parachain) {
+      beneficiary = maybeMultiAddress.Parachain;
     }
   }
 

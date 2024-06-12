@@ -8,6 +8,7 @@ import { TwElement } from "../base/tw.lit.js";
 import {
   BadgeType,
   IconArrow,
+  IconArrowRight,
   IconChain,
   IconChainFail,
   IconChainSkipped,
@@ -190,8 +191,8 @@ export class Journey extends TwElement {
           </div>
           <div class=${tw`flex items-center space-x-2`}>
             <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
-            <button class=${tw`h-5 w-5 text-gray-300 hover:text-gray-500`} @click=${this.handleExpandClick}>
-              ${this.expanded ? IconChevronUp() : IconChevronDown()}
+            <button class=${tw`h-5 w-5 text-gray-300 hover:text-gray-500 focus:outline-none`} @click=${this.handleExpandClick}>
+              ${this.expanded ? IconChevronDown() : IconArrowRight() }
             </button>
           </div>
         </div>
@@ -200,9 +201,6 @@ export class Journey extends TwElement {
         this.expanded
           ? html`
           <div
-            ${animate({
-              in: fadeInSlow,
-            })}
             @click=${this.handleExpandClick}
             class=${tw`flex flex-col`}
           >

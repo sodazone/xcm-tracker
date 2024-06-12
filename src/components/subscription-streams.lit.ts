@@ -115,12 +115,10 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
               <li
                 ${animate({
                   keyframeOptions: {
-                    duration: 500,
-                    delay: 100,
+                    duration: 400,
+                    delay: 50,
                     fill: "both",
-                  },
-                  in: fadeIn,
-                  out: fadeOut,
+                  }
                 })}
               >
                 <oc-journey
@@ -148,17 +146,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
             journeys,
             ([id]) => id,
             ([id, j]) => html`
-              <li
-                ${animate({
-                  keyframeOptions: {
-                    duration: 500,
-                    delay: 100,
-                    fill: "both",
-                  },
-                  in: fadeIn,
-                  out: fadeOut,
-                })}
-              >
+              <li>
                 <oc-journey
                   class=${tw`flex flex-grow`}
                   .data=${j as TypedXcmJourney}

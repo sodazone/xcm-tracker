@@ -34,6 +34,11 @@ export function IconArrow() {
   `;
 }
 
+export function IconArrowRight() {
+  return html`
+  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m9.71069 18.2929c.39051.3905 1.02371.3905 1.41421 0l4.8874-4.8923c.7804-.7811.7801-2.0469-.0006-2.8277l-4.8904-4.89036c-.3905-.39052-1.0237-.39052-1.41422 0-.39053.39053-.39053 1.02369 0 1.41422l4.18562 4.18564c.3906.3905.3906 1.0237 0 1.4142l-4.18201 4.1821c-.39053.3905-.39053 1.0236 0 1.4142z" fill="currentColor"/></svg>`
+}
+
 export function IconChevronUp() {
   return html`
   <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m18.2929 15.2893c.3905-.3905.3905-1.0237 0-1.4142l-4.8922-4.88744c-.7812-.7804-2.047-.78009-2.8278.00069l-4.89033 4.89035c-.39052.3905-.39052 1.0237 0 1.4142.39053.3906 1.02369.3906 1.41422 0l4.18561-4.1856c.3906-.3905 1.0237-.3905 1.4142 0l4.1821 4.182c.3905.3905 1.0237.3905 1.4142 0z" fill="currentColor"/></svg>
@@ -287,7 +292,7 @@ function getIconByChainId(id) {
     case "urn:ocn:westend:1000":
       return html`
         <svg
-          class=${tw`w-full w-full`}
+          class=${tw`w-full h-full`}
           x="0px"
           y="0px"
           viewBox="0 0 640 640"
@@ -413,7 +418,7 @@ function getIconByChainId(id) {
     case "urn:ocn:polkadot:2000": // acala
       return html`
         <svg
-          class=${tw`w-full w-full`}
+          class=${tw`w-full h-full`}
           viewBox="0 0 88 88"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -509,7 +514,7 @@ function getIconByChainId(id) {
     case "urn:ocn:polkadot:2004": // moonbeam
       return html`
         <svg
-   class=${tw`w-full w-full rounded-full`}
+   class=${tw`w-full h-full rounded-full`}
    viewBox="0 0 256 256"
    fill="none"
    version="1.1"
@@ -558,7 +563,7 @@ function getIconByChainId(id) {
     case "urn:ocn:polkadot:2034": // hydra
       return html`
         <svg
-          class=${tw`w-full w-full`}
+          class=${tw`w-full h-full`}
           viewBox="0 0 2001 2000"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -650,68 +655,53 @@ function getIconByChainId(id) {
       `;
     case "urn:ocn:polkadot:2104": // manta
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/manta.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2006": // astar
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/astar.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:kusama:2030":
     case "urn:ocn:polkadot:2030": // bifrost
-      return html`<svg class=${tw`w-full w-full`} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 50C0 22.3858 22.3858 0 50 0V0C77.6142 0 100 22.3858 100 50V50C100 77.6142 77.6142 100 50 100V100C22.3858 100 0 77.6142 0 50V50Z" fill="black"/>
-      <g clip-path="url(#clip0)">
-      <path d="M50 72.3684H19.7368L65.1316 26.9736H80.2631L50 72.3684Z" fill="url(#paint0_linear)"/>
-      </g>
-      <defs>
-      <linearGradient id="paint0_linear" x1="50" y1="26.9736" x2="50" y2="72.3684" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7AEDCF"/>
-      <stop offset="0.201333" stop-color="#68CEFA"/>
-      <stop offset="0.403244" stop-color="#689CF8"/>
-      <stop offset="0.602076" stop-color="#AC57C0"/>
-      <stop offset="0.801867" stop-color="#E65659"/>
-      <stop offset="1" stop-color="#F2C241"/>
-      </linearGradient>
-      <clipPath id="clip0">
-      <rect width="60.5263" height="45.3947" fill="white" transform="translate(19.7368 26.9736)"/>
-      </clipPath>
-      </defs>
-      </svg>`;
+    return html`<span
+    class=${tw`w-full h-full`}
+    style="background-image: url(/img/bifrost.png);background-size: cover;"
+  ></span>`;
     case "urn:ocn:polkadot:2031": // centrifuge
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/centrifuge.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2032": // interlay
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/interlay.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2019": // composable
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/composable.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2026": // nodle
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/nodle.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2035": // phala
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/phala.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2040": // polkadex
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/polkadex.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:2037": // unique
       return html`<span
-        class=${tw`w-full w-full`}
+        class=${tw`w-full h-full`}
         style="background-image: url(/img/unique.png);background-size: cover;"
       ></span>`;
     case "urn:ocn:polkadot:3340": // invarch
