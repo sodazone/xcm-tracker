@@ -1,15 +1,15 @@
 import { html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import "./subscription-streams.lit"
+import "./subscription-streams.lit";
 
-import { tw } from "../style.js";
-import { OcelloidsElement } from "../base/ocelloids.lit";
+import { animate, fadeIn, fadeInSlow, flyLeft, flyRight } from "@lit-labs/motion";
 import { Task } from "@lit/task";
 import { Subscription, xcm } from "@sodazone/ocelloids-client";
+import { OcelloidsElement } from "../base/ocelloids.lit";
 import { IconBurgerMenu, IconChevron, IconSpinner, IconXMark } from "../icons/index.js";
 import { chainName } from "../lib/utils";
-import { animate, fadeIn, fadeInSlow, flyLeft, flyRight } from "@lit-labs/motion";
+import { tw } from "../style.js";
 
 @customElement("oc-subscriptions")
 export class SubscriptionsElement extends OcelloidsElement {
@@ -41,13 +41,13 @@ export class SubscriptionsElement extends OcelloidsElement {
   onSelected(e) {
     this.subscriptionId = e.target.value;
     if (this.menuOpen) {
-      this.menuOpen = false
+      this.menuOpen = false;
     }
   }
 
   getChainName(subscriptionId: string) {
-    const sub = this.subscriptions.find(s => s.id === subscriptionId)
-    return sub ? chainName(sub.args.origin) : undefined
+    const sub = this.subscriptions.find((s) => s.id === subscriptionId);
+    return sub ? chainName(sub.args.origin) : undefined;
   }
 
   handleMenuClick() {
@@ -70,7 +70,7 @@ export class SubscriptionsElement extends OcelloidsElement {
           ${this.subscriptions.map(
             (s) => html`
               <option value=${s.id}><div class=${tw`uppercase`}>${chainName(s.args.origin)}</div></option>
-            `
+            `,
           )}
         </select>
       </div>
@@ -86,8 +86,8 @@ export class SubscriptionsElement extends OcelloidsElement {
         <div class=${tw`flex justify-between items-center p-4 border-b border-gray-900 bg-gray-900 bg-opacity-60`}>
           ${
             this.subscriptionId === "all"
-            ? html`<div>All Networks</div>`
-            : html`<div class=${tw`capitalize`}>${this.getChainName(this.subscriptionId)}</div>`
+              ? html`<div>All Networks</div>`
+              : html`<div class=${tw`capitalize`}>${this.getChainName(this.subscriptionId)}</div>`
           }
           <div class=${tw`h-5 w-5`} @click=${this.handleMenuClick}>
             ${this.menuOpen ? IconXMark() : IconBurgerMenu()}
@@ -95,23 +95,24 @@ export class SubscriptionsElement extends OcelloidsElement {
         </div>
         ${
           this.menuOpen
-          ? html`<div
+            ? html`<div
           class=${tw`flex flex-col`}>
             ${this.renderSelect()}
           </div>`
-          : ""
+            : ""
         }
       </div>
-    `
+    `;
   }
 
   renderSubscriptions() {
-    console.log('===', this.subscriptionId, this.subscriptions)
+    console.log("===", this.subscriptionId, this.subscriptions);
     return html`<div class=${tw`flex flex-col`}>
       ${this.subscriptionId ? this.renderMenu() : this.renderSelect()}
-      ${ this.subscriptionId
-          ? this.subscriptionId === "all" ?
-            html`<div class=${tw`flex flex-col`}>
+      ${
+        this.subscriptionId
+          ? this.subscriptionId === "all"
+            ? html`<div class=${tw`flex flex-col`}>
               <oc-subscription-streams
                 .mocked=${true}
                 .menuOpen=${this.menuOpen}
@@ -133,7 +134,7 @@ export class SubscriptionsElement extends OcelloidsElement {
       }
     </div>`;
   }
-  
+
   render() {
     return this._getSubscriptions.render({
       pending: () => html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,

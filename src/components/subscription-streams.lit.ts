@@ -27,7 +27,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   subscriptions: Subscription<xcm.XcmInputs>[];
 
   @property({
-    type: Boolean
+    type: Boolean,
   })
   menuOpen: boolean;
 
