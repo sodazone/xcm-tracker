@@ -2,15 +2,6 @@ import { blake3 } from "hash-wasm";
 
 import { AnyJson, SignerData, xcm } from "@sodazone/ocelloids-client";
 
-const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-});
-
 export type XcmJourneyWaypoint = {
   chainId: string;
   messageHash?: string;
@@ -43,7 +34,7 @@ export type XcmJourney = {
   id: string;
   sender: SignerData;
   updated: number;
-  created: string;
+  created: number;
   instructions: unknown;
   origin: XcmJourneyWaypoint;
   destination: XcmJourneyWaypoint;
@@ -146,7 +137,7 @@ async function toJourney(xcm: xcm.XcmMessagePayload): Promise<XcmJourney> {
     id: await toJourneyId(xcm),
     sender: xcm.sender,
     updated: now,
-    created: dateTimeFormat.format(now),
+    created: now,
     instructions: xcm.waypoint.instructions,
     origin: {
       ...xcm.origin,

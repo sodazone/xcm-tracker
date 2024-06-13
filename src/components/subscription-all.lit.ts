@@ -36,9 +36,10 @@ export class AllSubscriptions extends OcelloidsElement {
 
   render() {
     return this._getSubscriptions.render({
-      pending: () => html`<div class=${tw`flex items-center px-4`}>${IconSpinner()}</div>`,
+      pending: () => html`<div class=${tw`flex w-full items-center mt-20`}>${IconSpinner()}</div>`,
       complete: () => this.renderSubscriptions(),
-      error: (e) => html`<div>error: ${e}</div>`,
+      error: (e) =>
+        html`<div class=${tw`flex flex-col max-w-2xl mx-auto mt-20 p-6 space-y-6 rounded-lg p-2 text-yellow-400 md:border md:border-white/10`}>Error while fetching subscriptions: ${e}</div>`,
     });
   }
 }

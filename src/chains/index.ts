@@ -18,7 +18,7 @@ export const chains: Record<string, ChainProperties> = {
   "urn:ocn:polkadot:1002": {
     name: "bridge hub",
     ss58: 0,
-    subscanLink: "https://bridgehub-polkadot.subscan.io/"
+    subscanLink: "https://bridgehub-polkadot.subscan.io/",
   },
   "urn:ocn:polkadot:2000": {
     name: "acala",
@@ -68,7 +68,7 @@ export const chains: Record<string, ChainProperties> = {
   "urn:ocn:kusama:1002": {
     name: "bridge hub",
     ss58: 2,
-    subscanLink: "https://bridgehub-kusama.subscan.io"
+    subscanLink: "https://bridgehub-kusama.subscan.io",
   },
   "urn:ocn:kusama:2000": {
     name: "karura",
@@ -87,16 +87,16 @@ export const chains: Record<string, ChainProperties> = {
   "urn:ocn:kusama:2084": {
     name: "calamari",
     ss58: 78,
-    subscanLink: "https://calamari.subscan.io"
+    subscanLink: "https://calamari.subscan.io",
   },
   "urn:ocn:kusama:2092": {
     name: "kintsugi",
     ss58: 78,
-    subscanLink: "https://kintsugi.subscan.io"
+    subscanLink: "https://kintsugi.subscan.io",
   },
   "urn:ocn:kusama:2110": {
     name: "mangata",
     ss58: 42,
-    subscanLink: "https://mangatax.subscan.io"
+    subscanLink: "https://mangatax.subscan.io",
   },
 };

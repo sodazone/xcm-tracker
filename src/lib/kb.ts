@@ -87,12 +87,12 @@ export function humanize(journey: XcmJourney) {
   if (deposit !== undefined) {
     const X1 = deposit.DepositAsset.beneficiary.interior.X1;
 
-    let maybeMultiAddress = X1
+    let maybeMultiAddress = X1;
 
     if (X1 && Array.isArray(X1)) {
-      maybeMultiAddress = X1[0]
-    } 
-    
+      maybeMultiAddress = X1[0];
+    }
+
     if (maybeMultiAddress?.AccountId32) {
       beneficiary = toAddress(maybeMultiAddress.AccountId32.id, destination.chainId);
     } else if (maybeMultiAddress?.AccountKey20) {

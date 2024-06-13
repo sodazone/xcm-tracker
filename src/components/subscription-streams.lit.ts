@@ -7,7 +7,7 @@ import { Message, Subscription, xcm } from "@sodazone/ocelloids-client";
 
 import "./journey.lit.js";
 import { OcelloidsElement } from "../base/ocelloids.lit.js";
-import { IconChain, IconPulse } from "../icons/index.js";
+import { IconChain, IconChevronDown, IconChevronUp, IconPulse } from "../icons/index.js";
 import { FixedSizedCache } from "../lib/cache.js";
 import { TypedXcmJourney, XcmJourney, mergeJourney, toJourneyId } from "../lib/journey.js";
 import { sender } from "../lib/mock.js";
@@ -35,6 +35,9 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   @state()
   private connections: WebSocket[] = [];
 
+  @state()
+  private expanded: boolean = false;
+
   @property({
     type: Boolean,
   })
@@ -42,6 +45,10 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
   constructor() {
     super();
+  }
+
+  handleExpandClick() {
+    this.expanded = !this.expanded;
   }
 
   async onMessage(msg: Message<xcm.XcmMessagePayload>) {
@@ -67,22 +74,28 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     const senders = uniques(this.subscriptions.map((s) => s.args.senders ?? "*"));
 
     return html`
+      <button class=${tw`flex bg-gray-100 bg-opacity-30 text-gray-900 justify-between text-sm items-center p-2 focus:outline-none md:hidden`} @click=${this.handleExpandClick}>
+        <span>See subscription details</span>
+        <div class=${tw`h-4 w-4`}>
+          ${this.expanded ? IconChevronUp() : IconChevronDown()}
+        </div>
+      </button>
       <div
-        class=${tw`flex flex-col space-y-1 w-full text-sm md:items-center md:flex-row md:space-x-3 text-gray-500 px-4 border-b border-gray-900 md:divide-x md:divide-gray-900 bg-gray-900 bg-opacity-80`}
+        class=${tw`${this.expanded ? "inline-flex" : "hidden"} flex flex-col w-full text-sm text-gray-500 px-4 border-b border-gray-900 bg-gray-900 bg-opacity-80 md:divide-x md:divide-gray-900 md:items-center md:flex-row md:space-x-3 md:inline-flex`}
       >
-        <div class=${tw`flex flex-col space-y-2 pb-3 md:items-center`}>
+        <div class=${tw`flex flex-col space-y-2 pb-2 pt-2 md:pt-0 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Origins</span>
           <span class=${tw`flex -space-x-1`}>
             ${origins.map((origin) => IconChain(origin))}
           </span>
         </div>
-        <div class=${tw`flex flex-col space-y-2 md:pl-3 pb-3 md:items-center`}>
+        <div class=${tw`flex flex-col space-y-2 pb-2 md:pl-3 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Destinations</span>
           <span class=${tw`flex -space-x-1`}>
             ${destinations.map((destination) => IconChain(destination))}
           </span>
         </div>
-        <div class=${tw`flex flex-col space-y-2 md:pl-3 pb-4`}>
+        <div class=${tw`flex flex-col space-y-2 pb-2 md:pl-3 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Senders</span>
           <span class=${tw`text-gray-200`}>
             ${senders.map((s) => trunc(s)).join(",")}
@@ -118,11 +131,11 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
                     duration: 400,
                     delay: 50,
                     fill: "both",
-                  }
+                  },
                 })}
               >
                 <oc-journey
-                  class=${tw`flex w-full`}
+                  class=${tw`flex flex-col md:flex-row md:flex-grow`}
                   .data=${j as TypedXcmJourney}
                   .pinned=${false}
                   @pinClick=${(e: Event) => this.pinJourney(e, id, j)}
@@ -148,7 +161,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
             ([id, j]) => html`
               <li>
                 <oc-journey
-                  class=${tw`flex flex-grow`}
+                  class=${tw`flex flex-col md:flex-row md:flex-grow`}
                   .data=${j as TypedXcmJourney}
                   .pinned=${true}
                   @pinClick=${(e: Event) => this.unpinJourney(e, id, j)}

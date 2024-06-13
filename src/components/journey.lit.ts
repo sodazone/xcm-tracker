@@ -8,6 +8,7 @@ import { TwElement } from "../base/tw.lit.js";
 import {
   BadgeType,
   IconArrow,
+  IconArrowDown,
   IconArrowRight,
   IconChain,
   IconChainFail,
@@ -17,6 +18,7 @@ import {
   IconChainWait,
   IconChevronDown,
   IconChevronUp,
+  IconExternalLink,
   IconFail,
   IconPin,
   IconSkipped,
@@ -25,12 +27,13 @@ import {
   IconUnpin,
   IconWait,
 } from "../icons/index.js";
-import { TypedXcmJourney, TypedXcmJourneyWaypoint, XcmJourneyLeg, XcmJourneyWaypoint } from "../lib/journey.js";
+import { TypedXcmJourney, TypedXcmJourneyWaypoint, XcmJourney, XcmJourneyLeg, XcmJourneyWaypoint } from "../lib/journey.js";
 import { HumanizedXcm, humanize } from "../lib/kb.js";
 import { tw } from "../style.js";
 
 import "./code.lit.js";
 import { chains } from "../chains/index.js";
+import { formatDateTime } from "../lib/utils.js";
 
 @customElement("oc-journey")
 export class Journey extends TwElement {
@@ -43,6 +46,7 @@ export class Journey extends TwElement {
   pinned: boolean;
 
   @state() expanded: boolean = false;
+  @state() legsExpanded: boolean = false;
 
   // XXX just a quick hack
   iconForOutcomeFromConsensus(j: XcmJourneyWaypoint) {
@@ -83,12 +87,23 @@ export class Journey extends TwElement {
     if (event && Object.keys(event).length > 0) {
       const xtId = extrinsicId ?? `${blockNumber}-0`;
       const link = subscan ? `${subscan}/extrinsic/${xtId}?event=${event.eventId}` : undefined;
-      return html`<a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""}`}>${event.eventId}</a>`;
+      return html`
+        <a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""} flex space-x-1 text-sm items-center`}>
+          <span>${event.eventId}</span>
+          <div class=${tw`w-4 h-4`}>${IconExternalLink()}</div>
+        </a>`;
     }
 
-    const link = subscan ? `${subscan}/block/${blockNumber}` : undefined;
-    return html`
-        <a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""}`}>${blockNumber}</a>`;
+    if (blockNumber) {
+      const link = subscan ? `${subscan}/block/${blockNumber}` : undefined;
+      return html`
+        <a target="_blank" href=${ifDefined(link)} class=${tw`${link ? "hover:underline" : ""} flex space-x-1 text-sm items-center`}>
+          <span>${blockNumber}</span>
+          <div class=${tw`w-4 h-4`}>${IconExternalLink()}</div>
+        </a>`;
+    }
+
+    return ""
   }
 
   renderStatusRow(point: TypedXcmJourneyWaypoint) {
@@ -99,7 +114,7 @@ export class Journey extends TwElement {
         <div class=${tw`flex items-center justify-center space-x-4`}>
           ${this.iconForOutcomeFromConsensus(point)}
           ${this.renderBlockInfo(point)}
-          <span class=${tw`ml-auto text-gray-400 text-xs font-mono capitalize`}
+          <span class=${tw`hidden ml-auto text-gray-400 text-xs font-mono capitalize md:block`}
             >${point.event && Object.keys(point.event).length > 0 ? `${point.event.section} ${point.event.method}` : ""}</span
           >
         </div>
@@ -107,10 +122,9 @@ export class Journey extends TwElement {
           ${
             point.assetsTrapped !== undefined
               ? html`
-                <span
-                  class=${tw`text-xs font-medium px-2.5 py-0.5 rounded bg-red-500 text-gray-900`}
-                  >trapped</span
-                >
+                <span class=${tw`text-xs font-medium px-2.5 py-0.5 rounded bg-red-500 text-gray-900`}>
+                  trapped
+                </span>
               `
               : ""
           }
@@ -124,13 +138,16 @@ export class Journey extends TwElement {
     this.expanded = !this.expanded;
   }
 
+  handleLegsExpandClick() {
+    this.legsExpanded = !this.legsExpanded;
+  }
+
   renderLeg(leg: XcmJourneyLeg) {
     const label =
       leg.type === "bridge"
         ? "from " + leg.stops.map((s) => s.chainId.split(":")[2].toUpperCase()).join(" to ")
         : "on " + leg.stops[0].chainId.split(":")[2].toUpperCase();
-    return html`
-    <div>
+    return html`    
       <div class=${tw`flex mx-auto py-2 px-4 bg-gray-900 bg-opacity-70 text-gray-400 text-sm`}>
         ${label}
       </div>
@@ -143,27 +160,51 @@ export class Journey extends TwElement {
           (p) => this.renderStatusRow(p as TypedXcmJourneyWaypoint),
         )}
       </div>
-    </div>
-  `;
-  }
-
-  renderHumanized(hxcm: HumanizedXcm) {
-    const { type, from, to } = hxcm;
-
-    return html`
-      <span class=${tw`mr-4`}>
-        ${BadgeType(type)} from
-        <span class=${tw`text-gray-300`}>${from}</span> to
-        <span class=${tw`text-gray-300`}>${to}</span>
-      </span>
     `;
   }
 
-  getPinIcon() {
+  renderHumanized(j: XcmJourney) {
+    const { type, from, to } = humanize(j);
+
     return html`
-      <button class=${tw`h-4 w-4 text-gray-300`} @click=${(_: Event) => this.firePinClickEvent()}>
-        ${this.pinned ? IconUnpin() : IconPin()}
-      </button>
+      <div class=${tw`w-full justify-between items-center hidden md:inline-flex`}>
+        <div class=${tw`flex items-center space-x-4`}>
+          <div>${BadgeType(type)}</div>
+          <div class=${tw`flex space-x-2 items-center`}>
+            <span>from</span>
+            <span class=${tw`text-gray-300`}>${from}</span>
+            <span>to</span>
+            <span class=${tw`text-gray-300`}>${to}</span>
+          </div>
+          <div class=${tw`flex items-center space-x-4 p-1 md:p-0 md:items-center`}>
+            ${this.iconForOutcomeFromConsensus(j.origin)}
+            <span class=${tw`text-gray-700`}>${IconArrow()}</span>
+            ${this.iconForOutcomeFromConsensus(j.destination)}
+          </div>
+        </div>
+        <div class=${tw`flex flex-shrink items-center space-x-2`}>
+          <span class=${tw`mr-3 text-sm text-gray-500`}> ${formatDateTime(j.created)} </span>
+          <button class=${tw`h-5 w-5 text-gray-300 hover:text-gray-500 focus:outline-none`} @click=${this.handleExpandClick}>
+            ${this.expanded ? IconChevronDown() : IconArrowRight()}
+          </button>
+        </div>
+      </div>
+
+      <div class=${tw`flex flex-col text-gray-500 md:hidden`}>
+        <div>${BadgeType(type)}</div>
+        <div class=${tw`flex flex-col space-y-4 mt-6 mb-4`}>
+          <div class=${tw`flex space-x-4 ml-2 items-center`}>
+            ${this.iconForOutcomeFromConsensus(j.origin)}
+            <span class=${tw`text-gray-300`}>${from}</span>
+          </div>
+          <div class=${tw`w-4 h-4 ml-10`}>${IconArrowDown()}</div>
+          <div class=${tw`flex space-x-4 ml-2 items-center`}>
+            ${this.iconForOutcomeFromConsensus(j.destination)}
+            <span class=${tw`text-gray-300`}>${to}</span>
+          </div>
+        </div>
+        <span class=${tw`mr-3 text-sm`}>at ${formatDateTime(j.created, true)} </span>
+      </div>
     `;
   }
 
@@ -175,28 +216,24 @@ export class Journey extends TwElement {
   render() {
     const j = this.data;
 
-    return html`<div class=${tw`w-full`}>
+    return html`<div class=${tw`flex flex-col w-full`}>
       <div
-        class=${tw`w-full flex p-4 items-center space-x-3 bg-gray-900 bg-opacity-80`}
+        class=${tw`w-full flex justify-between py-4 px-2 bg-gray-900 bg-opacity-80 flex-row items-center md:p-4`}
       >
-        ${this.getPinIcon()}
-        <div class=${tw`flex w-full justify-between items-center`}>
-          <div class=${tw`flex items-center space-x-4`}>
-            <span class=${tw`pr-4 text-gray-500`}>
-              ${this.renderHumanized(humanize(j))}
-            </span>
-            ${this.iconForOutcomeFromConsensus(j.origin)}
-            <span class=${tw`text-gray-700`}>${IconArrow()}</span>
-            ${this.iconForOutcomeFromConsensus(j.destination)}
-          </div>
-          <div class=${tw`flex items-center space-x-2`}>
-            <span class=${tw`mr-3 text-sm text-gray-500`}> ${j.created} </span>
-            <button class=${tw`h-5 w-5 text-gray-300 hover:text-gray-500 focus:outline-none`} @click=${this.handleExpandClick}>
-              ${this.expanded ? IconChevronDown() : IconArrowRight() }
-            </button>
-          </div>
-        </div>
+        <button class=${tw`hidden h-4 w-4 text-gray-300 mr-3 md:inline-block`} @click=${(_: Event) => this.firePinClickEvent()}>
+          ${this.pinned ? IconUnpin() : IconPin()}
+        </button>
+        ${this.renderHumanized(j)}     
+        <button class=${tw`h-4 w-4 text-gray-300 self-start md:hidden`} @click=${(_: Event) => this.firePinClickEvent()}>
+          ${this.pinned ? IconUnpin() : IconPin()}
+        </button>
       </div>
+      <button class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-t-1 border-b-1 border-gray-900 text-gray-300 px-2 py-4 justify-between focus:outline-none md:hidden`} @click=${this.handleExpandClick}>
+        <span>${this.expanded ? "Hide XCM details" : "Show XCM details"}</span>
+        <div class=${tw`h-4 w-4`}>
+          ${this.expanded ? IconChevronUp() : IconChevronDown()}
+        </div>
+      </button>
       ${
         this.expanded
           ? html`
@@ -228,7 +265,7 @@ export class Journey extends TwElement {
             <div class=${tw`py-1 text-sm px-4 text-gray-400 bg-gray-600 capitalize border-t border-gray-600`}>
               XCM Origin Message Hash
             </div>
-            <div class=${tw`text-sm text-mono bg-gray-700 py-4 px-6`}>
+            <div class=${tw`text-sm text-mono bg-gray-700 py-4 px-6 break-all`}>
               ${j.origin.messageHash}
             </div>
             <div
@@ -243,11 +280,22 @@ export class Journey extends TwElement {
         `
           : ""
       }
-      ${repeat(
-        j.legs,
-        (l) => j.id + l.index,
-        (l) => this.renderLeg(l),
-      )}
+      <button
+        class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-b-1 border-gray-900 text-gray-300 px-2 py-4 justify-between focus:outline-none md:hidden`}
+        @click=${this.handleLegsExpandClick}
+      >
+        <span>${this.legsExpanded ? "Hide journey details" : "Show journey details"}</span>
+        <div class=${tw`h-4 w-4`}>
+        ${this.legsExpanded ? IconChevronUp() : IconChevronDown()}
+        </div>
+      </button>
+      <div class=${tw`${this.legsExpanded ? "inline-block" : "hidden"} md:inline-block`}>
+        ${repeat(
+          j.legs,
+          (l) => j.id + l.index,
+          (l) => this.renderLeg(l),
+        )}
+      </div>
     </div>`;
   }
 }
