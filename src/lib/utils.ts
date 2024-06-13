@@ -26,7 +26,7 @@ export function trunc(str, len = 11, sep = "…") {
   return str.substr(0, frontChars) + sep + str.substr(str.length - backChars);
 }
 
-export function chainName(id) {
+export function chainName(id: string) {
   const chain = chains[id];
   if (chain !== undefined) {
     return chain.name;

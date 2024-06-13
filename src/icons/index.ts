@@ -25,6 +25,18 @@ export function IconArrowDown() {
   `;
 }
 
+export function IconXMark() {
+  return html`
+  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m20.7457 3.32851c-.3905-.39053-1.0237-.39053-1.4142 0l-7.2944 7.29439-7.29435-7.29439c-.39052-.39053-1.02369-.39053-1.41421 0-.39053.39052-.39053 1.02369 0 1.41421l7.29436 7.29438-7.29434 7.2943c-.39053.3906-.39053 1.0237 0 1.4143.39052.3905 1.02369.3905 1.41421 0l7.29433-7.2944 7.2944 7.2944c.3905.3905 1.0237.3905 1.4142 0 .3905-.3906.3905-1.0237 0-1.4142l-7.2944-7.2944 7.2944-7.29438c.3905-.39052.3905-1.02369 0-1.41421z" fill="currentColor"/></svg>
+  `
+}
+
+export function IconBurgerMenu() {
+  return html`
+  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path d="m1 12c0-.5523.44772-1 1-1h20c.5523 0 1 .4477 1 1s-.4477 1-1 1h-20c-.55228 0-1-.4477-1-1z"/><path d="m1 4c0-.55228.44772-1 1-1h20c.5523 0 1 .44772 1 1s-.4477 1-1 1h-20c-.55228 0-1-.44772-1-1z"/><path d="m1 20c0-.5523.44772-1 1-1h20c.5523 0 1 .4477 1 1s-.4477 1-1 1h-20c-.55228 0-1-.4477-1-1z"/></g></svg>
+  `
+}
+
 export function IconArrow() {
   return html`
     <svg

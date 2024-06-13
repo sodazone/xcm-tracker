@@ -224,7 +224,7 @@ export class Journey extends TwElement {
 
     return html`<div class=${tw`flex flex-col w-full`}>
       <div
-        class=${tw`w-full flex justify-between py-4 px-2 bg-gray-900 bg-opacity-80 flex-row items-center md:p-4`}
+        class=${tw`w-full flex justify-between p-4 bg-gray-900 bg-opacity-80 flex-row items-center md:p-4`}
       >
         <button class=${tw`hidden h-4 w-4 text-gray-300 mr-3 md:inline-block`} @click=${(_: Event) => this.firePinClickEvent()}>
           ${this.pinned ? IconUnpin() : IconPin()}
@@ -234,7 +234,7 @@ export class Journey extends TwElement {
           ${this.pinned ? IconUnpin() : IconPin()}
         </button>
       </div>
-      <button class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-t-1 border-b-1 border-gray-900 text-gray-300 px-2 py-4 justify-between focus:outline-none md:hidden`} @click=${this.handleExpandClick}>
+      <button class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-t-1 border-b-1 border-gray-900 text-gray-300 p-4 justify-between focus:outline-none md:hidden`} @click=${this.handleExpandClick}>
         <span>${this.expanded ? "Hide XCM details" : "Show XCM details"}</span>
         <div class=${tw`h-4 w-4`}>
           ${this.expanded ? IconChevronUp() : IconChevronDown()}
@@ -287,7 +287,7 @@ export class Journey extends TwElement {
           : ""
       }
       <button
-        class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-b-1 border-gray-900 text-gray-300 px-2 py-4 justify-between focus:outline-none md:hidden`}
+        class=${tw`flex w-full text-sm bg-gray-900 bg-opacity-80 border-b-1 border-gray-900 text-gray-300 p-4 justify-between focus:outline-none md:hidden`}
         @click=${this.handleLegsExpandClick}
       >
         <span>${this.legsExpanded ? "Hide journey details" : "Show journey details"}</span>

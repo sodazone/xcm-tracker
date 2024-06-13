@@ -1,4 +1,4 @@
-import { animate, fadeIn, fadeOut } from "@lit-labs/motion";
+import { animate, fadeIn, fadeInSlow, fadeOut, flyLeft, flyRight } from "@lit-labs/motion";
 import { PropertyValues, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
@@ -26,6 +26,11 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   })
   subscriptions: Subscription<xcm.XcmInputs>[];
 
+  @property({
+    type: Boolean
+  })
+  menuOpen: boolean;
+
   @state()
   private journeys = new FixedSizedCache<XcmJourney>();
 
@@ -35,9 +40,6 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
   @state()
   private connections: WebSocket[] = [];
 
-  @state()
-  private expanded: boolean = false;
-
   @property({
     type: Boolean,
   })
@@ -45,10 +47,6 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
   constructor() {
     super();
-  }
-
-  handleExpandClick() {
-    this.expanded = !this.expanded;
   }
 
   async onMessage(msg: Message<xcm.XcmMessagePayload>) {
@@ -74,14 +72,8 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
     const senders = uniques(this.subscriptions.map((s) => s.args.senders ?? "*"));
 
     return html`
-      <button class=${tw`flex bg-gray-100 bg-opacity-30 text-gray-900 justify-between text-sm items-center p-2 focus:outline-none md:hidden`} @click=${this.handleExpandClick}>
-        <span>See subscription details</span>
-        <div class=${tw`h-4 w-4`}>
-          ${this.expanded ? IconChevronUp() : IconChevronDown()}
-        </div>
-      </button>
       <div
-        class=${tw`${this.expanded ? "inline-flex" : "hidden"} flex flex-col w-full text-sm text-gray-500 px-4 border-b border-gray-900 bg-gray-900 bg-opacity-80 md:divide-x md:divide-gray-900 md:items-center md:flex-row md:space-x-3 md:inline-flex`}
+        class=${tw`${this.menuOpen ? "inline-flex" : "hidden"} flex flex-col w-full text-sm text-gray-500 px-4 border-b border-gray-900 bg-gray-900 bg-opacity-80 md:divide-x md:divide-gray-900 md:items-center md:flex-row md:space-x-3 md:inline-flex`}
       >
         <div class=${tw`flex flex-col space-y-2 pb-2 pt-2 md:pt-0 md:items-center`}>
           <span class=${tw`uppercase font-semibold`}>Origins</span>
@@ -195,7 +187,7 @@ export class SubscriptionStreamsElement extends OcelloidsElement {
 
   render() {
     if (this.connections.length === 0) {
-      console.log("open ws");
+      console.log("open ws", this.subscriptions);
 
       for (const subscription of this.subscriptions) {
         this.connections.push(
