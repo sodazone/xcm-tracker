@@ -12,7 +12,7 @@ const dateTimeFormatLong = new Intl.DateTimeFormat("en-US", {
 
 const dateTimeFormatShort = new Intl.DateTimeFormat("en-US", {
   dateStyle: "short",
-  timeStyle: "short"
+  timeStyle: "short",
 });
 
 export function trunc(str, len = 11, sep = "…") {
@@ -44,8 +44,8 @@ export function toAddress(key: string, chainId: string) {
 
 export function formatDateTime(timestamp: number, short: boolean = false) {
   if (short) {
-    return dateTimeFormatShort.format(timestamp)
+    return dateTimeFormatShort.format(timestamp);
   }
 
-  return dateTimeFormatLong.format(timestamp)
+  return dateTimeFormatLong.format(timestamp);
 }

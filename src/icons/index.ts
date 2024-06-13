@@ -16,13 +16,13 @@ export function IconUnpin() {
 
 export function IconExternalLink() {
   return html`
-  <svg class=${tw`w-full h-full`} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="currentColor" opacity="0"/><g fill="currentColor"><path d="m20 11a1 1 0 0 0 -1 1v6a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1-1v-12a1 1 0 0 1 1-1h6a1 1 0 0 0 0-2h-6a3 3 0 0 0 -3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-6a1 1 0 0 0 -1-1z"/><path d="m16 5h1.58l-6.29 6.28a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l6.29-6.28v1.58a1 1 0 0 0 1 1 1 1 0 0 0 1-1v-4a1 1 0 0 0 -1-1h-4a1 1 0 0 0 0 2z"/></g></svg>`
+  <svg class=${tw`w-full h-full`} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="currentColor" opacity="0"/><g fill="currentColor"><path d="m20 11a1 1 0 0 0 -1 1v6a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1-1v-12a1 1 0 0 1 1-1h6a1 1 0 0 0 0-2h-6a3 3 0 0 0 -3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-6a1 1 0 0 0 -1-1z"/><path d="m16 5h1.58l-6.29 6.28a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l6.29-6.28v1.58a1 1 0 0 0 1 1 1 1 0 0 0 1-1v-4a1 1 0 0 0 -1-1h-4a1 1 0 0 0 0 2z"/></g></svg>`;
 }
 
 export function IconArrowDown() {
   return html`
   <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path d="m11.9991 21.2501c-.19 0-.38-.07-.53-.22l-6.06996-6.07c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l5.53996 5.54 5.54-5.54c.29-.29.77-.29 1.06 0s.29.77 0 1.06l-6.07 6.07c-.15.15-.34.22-.53.22z"/><path d="m12 21.08c-.41 0-.75-.34-.75-.75v-16.83c0-.41.34-.75.75-.75s.75.34.75.75v16.83c0 .41-.34.75-.75.75z"/></g></svg>
-  `
+  `;
 }
 
 export function IconArrow() {

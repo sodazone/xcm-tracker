@@ -27,7 +27,13 @@ import {
   IconUnpin,
   IconWait,
 } from "../icons/index.js";
-import { TypedXcmJourney, TypedXcmJourneyWaypoint, XcmJourney, XcmJourneyLeg, XcmJourneyWaypoint } from "../lib/journey.js";
+import {
+  TypedXcmJourney,
+  TypedXcmJourneyWaypoint,
+  XcmJourney,
+  XcmJourneyLeg,
+  XcmJourneyWaypoint,
+} from "../lib/journey.js";
 import { HumanizedXcm, humanize } from "../lib/kb.js";
 import { tw } from "../style.js";
 
@@ -103,7 +109,7 @@ export class Journey extends TwElement {
         </a>`;
     }
 
-    return ""
+    return "";
   }
 
   renderStatusRow(point: TypedXcmJourneyWaypoint) {
