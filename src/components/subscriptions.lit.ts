@@ -56,9 +56,9 @@ export class SubscriptionsElement extends OcelloidsElement {
 
   renderSelect() {
     return html` <div
-      class=${tw`flex flex-col border-b border-gray-900 bg-gray-900 bg-opacity-60`}
+      class=${tw`flex flex-col border-b border-gray-900 bg-gray-900 bg-opacity-90`}
     >
-      <div class=${tw`grid text-gray-300`}>
+      <div class=${tw`grid`}>
         ${IconChevron()}
         <select
           id="select-subscription"
@@ -69,7 +69,7 @@ export class SubscriptionsElement extends OcelloidsElement {
           <option value="all">All networks</option>
           ${this.subscriptions.map(
             (s) => html`
-              <option value=${s.id}><div class=${tw`uppercase`}>${chainName(s.args.origin)}</div></option>
+              <option value=${s.id}>${chainName(s.args.origin)}</option>
             `,
           )}
         </select>
@@ -83,11 +83,11 @@ export class SubscriptionsElement extends OcelloidsElement {
         ${this.renderSelect()}
       </div>
       <div class=${tw`flex flex-col md:hidden`}>
-        <div class=${tw`flex justify-between items-center p-4 border-b border-gray-900 bg-gray-900 bg-opacity-60`}>
+        <div class=${tw`flex justify-between items-center p-4 border-b border-gray-900 bg-gray-900 bg-opacity-90 text-sm uppercase`}>
           ${
             this.subscriptionId === "all"
-              ? html`<div>All Networks</div>`
-              : html`<div class=${tw`capitalize`}>${this.getChainName(this.subscriptionId)}</div>`
+              ? html`<div>XCM from All Networks</div>`
+              : html`<div>XCM from ${this.getChainName(this.subscriptionId)}</div>`
           }
           <div class=${tw`h-5 w-5`} @click=${this.handleMenuClick}>
             ${this.menuOpen ? IconXMark() : IconBurgerMenu()}

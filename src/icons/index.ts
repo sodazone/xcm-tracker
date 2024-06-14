@@ -33,7 +33,10 @@ export function IconXMark() {
 
 export function IconBurgerMenu() {
   return html`
-  <svg class=${tw`w-full h-full`} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path d="m1 12c0-.5523.44772-1 1-1h20c.5523 0 1 .4477 1 1s-.4477 1-1 1h-20c-.55228 0-1-.4477-1-1z"/><path d="m1 4c0-.55228.44772-1 1-1h20c.5523 0 1 .44772 1 1s-.4477 1-1 1h-20c-.55228 0-1-.44772-1-1z"/><path d="m1 20c0-.5523.44772-1 1-1h20c.5523 0 1 .4477 1 1s-.4477 1-1 1h-20c-.55228 0-1-.4477-1-1z"/></g></svg>
+  <svg class=${tw`w-full h-full`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+</svg>
+
   `;
 }
 
