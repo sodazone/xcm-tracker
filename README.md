@@ -1,5 +1,8 @@
 # XCM Tracker Demo
 
+> [!IMPORTANT]
+> New repo at https://github.com/sodazone/xcm-tracker-app
+
 A demonstration web application for tracking XCM executions over WebSockets.
 
 ## What it shows
